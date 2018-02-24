@@ -1,7 +1,10 @@
 package us.codecraft.webmagic.utils;
 
 /**
+ * http操作常量
+ * <p>
  * Some constants of Http protocal.
+ *
  * @author code4crafer@gmail.com
  * @since 0.5.0
  */

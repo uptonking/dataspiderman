@@ -10,8 +10,8 @@ import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.downloader.Downloader;
-import us.codecraft.webmagic.selector.Html;
-import us.codecraft.webmagic.selector.PlainText;
+import us.codecraft.webmagic.selector.selectable.Html;
+import us.codecraft.webmagic.selector.selectable.PlainText;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class SeleniumDownloader implements Downloader, Closeable {
 
 	/**
 	 * Constructor without any filed. Construct PhantomJS browser
-	 * 
+	 *
 	 * @author bob.li.0718@gmail.com
 	 */
 	public SeleniumDownloader() {
@@ -98,7 +98,7 @@ public class SeleniumDownloader implements Downloader, Closeable {
 
 		/*
 		 * TODO You can add mouse event or other processes
-		 * 
+		 *
 		 * @author: bob.li.0718@gmail.com
 		 */
 

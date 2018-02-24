@@ -9,16 +9,27 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A simple ProxyProvider. Provide proxy as round-robin without heartbeat and error check. It can be used when all proxies are stable.
+ * 基于轮询算法的简单代理
+ * 无心跳检测、错误检查，常用于稳定可靠的代理池
+ * <p>
+ * A simple ProxyProvider.
+ * Provide proxy as round-robin without heartbeat and error check.
+ * It can be used when all proxies are stable.
+ *
  * @author code4crafter@gmail.com
- *         Date: 17/4/16
- *         Time: 10:18
+ * Date: 17/4/16
+ * Time: 10:18
  * @since 0.7.0
  */
 public class SimpleProxyProvider implements ProxyProvider {
 
+    /**
+     * 可用代理对象列表
+     */
     private final List<Proxy> proxies;
-
+    /**
+     * 当前使用的代理对象索引
+     */
     private final AtomicInteger pointer;
 
     public SimpleProxyProvider(List<Proxy> proxies) {
@@ -30,6 +41,9 @@ public class SimpleProxyProvider implements ProxyProvider {
         this.pointer = pointer;
     }
 
+    /**
+     * 创建代理提供者的静态方法
+     */
     public static SimpleProxyProvider from(Proxy... proxies) {
         List<Proxy> proxiesTemp = new ArrayList<Proxy>(proxies.length);
         for (Proxy proxy : proxies) {
@@ -40,7 +54,7 @@ public class SimpleProxyProvider implements ProxyProvider {
 
     @Override
     public void returnProxy(Proxy proxy, Page page, Task task) {
-        //Donothing
+        //todo do nothing
     }
 
     @Override
@@ -48,6 +62,11 @@ public class SimpleProxyProvider implements ProxyProvider {
         return proxies.get(incrForLoop());
     }
 
+    /**
+     * 依次轮询产生代理索引
+     *
+     * @return 下一个代理索引
+     */
     private int incrForLoop() {
         int p = pointer.incrementAndGet();
         int size = proxies.size();

@@ -1,4 +1,4 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.element;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.jsoup.nodes.Element;
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 针对html、text的css抽取器
+ * <p>
  * CSS selector. Based on Jsoup.
  *
  * @author code4crafter@gmail.com <br>

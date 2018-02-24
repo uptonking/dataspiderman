@@ -60,9 +60,9 @@ public class OOSpider<T> extends Spider {
     /**
      * create a spider
      *
-     * @param site site
+     * @param site              site
      * @param pageModelPipeline pageModelPipeline
-     * @param pageModels pageModels
+     * @param pageModels        pageModels
      */
     public OOSpider(Site site, PageModelPipeline pageModelPipeline, Class... pageModels) {
         this(ModelPageProcessor.create(site, pageModels));
@@ -97,7 +97,7 @@ public class OOSpider<T> extends Spider {
         return this;
     }
 
-    public OOSpider setIsExtractLinks(boolean isExtractLinks){
+    public OOSpider setIsExtractLinks(boolean isExtractLinks) {
         modelPageProcessor.setExtractLinks(isExtractLinks);
         return this;
     }

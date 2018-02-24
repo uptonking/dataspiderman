@@ -5,6 +5,8 @@ import org.jsoup.nodes.Element;
 import java.util.List;
 
 /**
+ * 针对html的抽取器接口
+ * <p>
  * Selector(extractor) for html elements.<br>
  *
  * @author code4crafter@gmail.com <br>

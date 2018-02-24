@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 对url的封装对象bean，request对应url是1对1
+ * 是PageProcessor与Downloader交互的载体，也是PageProcessor控制Downloader唯一方式
+ * <p>
  * Object contains url to crawl.<br>
  * It contains some additional information.<br>
  *
@@ -25,8 +28,8 @@ public class Request implements Serializable {
     private String method;
 
     private HttpRequestBody requestBody;
-
     /**
+     * 可以在extra中保存附加信息，如页面的信息
      * Store additional information in extras.
      */
     private Map<String, Object> extras;
@@ -39,15 +42,18 @@ public class Request implements Serializable {
     private Map<String, String> headers = new HashMap<String, String>();
 
     /**
+     * 请求的优先级，用于爬虫地址调度
      * Priority of the request.<br>
      * The bigger will be processed earlier. <br>
+     *
      * @see us.codecraft.webmagic.scheduler.PriorityScheduler
      */
     private long priority;
 
     /**
+     * url对应的页面内容是否是二进制
+     * 若是，则不解析下载完成的页面
      * When it is set to TRUE, the downloader will not try to parse response body to text.
-     *
      */
     private boolean binaryContent = false;
 
@@ -67,10 +73,10 @@ public class Request implements Serializable {
     /**
      * Set the priority of request for sorting.<br>
      * Need a scheduler supporting priority.<br>
-     * @see us.codecraft.webmagic.scheduler.PriorityScheduler
      *
      * @param priority priority
      * @return this
+     * @see us.codecraft.webmagic.scheduler.PriorityScheduler
      */
     @Experimental
     public Request setPriority(long priority) {
@@ -93,10 +99,6 @@ public class Request implements Serializable {
         return this;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public Map<String, Object> getExtras() {
         return extras;
     }
@@ -106,6 +108,10 @@ public class Request implements Serializable {
         return this;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public Request setUrl(String url) {
         this.url = url;
         return this;
@@ -113,6 +119,7 @@ public class Request implements Serializable {
 
     /**
      * The http method of the request. Get for default.
+     *
      * @return httpMethod
      * @see us.codecraft.webmagic.utils.HttpConstant.Method
      * @since 0.5.0
@@ -126,36 +133,18 @@ public class Request implements Serializable {
         return this;
     }
 
-    @Override
-    public int hashCode() {
-        int result = url != null ? url.hashCode() : 0;
-        result = 31 * result + (method != null ? method.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Request request = (Request) o;
-
-        if (url != null ? !url.equals(request.url) : request.url != null) return false;
-        return method != null ? method.equals(request.method) : request.method == null;
-    }
-
     public Request addCookie(String name, String value) {
         cookies.put(name, value);
         return this;
     }
 
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+
     public Request addHeader(String name, String value) {
         headers.put(name, value);
         return this;
-    }
-
-    public Map<String, String> getCookies() {
-        return cookies;
     }
 
     public Map<String, String> getHeaders() {
@@ -189,6 +178,24 @@ public class Request implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        int result = url != null ? url.hashCode() : 0;
+        result = 31 * result + (method != null ? method.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Request request = (Request) o;
+
+        if (url != null ? !url.equals(request.url) : request.url != null) return false;
+        return method != null ? method.equals(request.method) : request.method == null;
+    }
+
+    @Override
     public String toString() {
         return "Request{" +
                 "url='" + url + '\'' +
@@ -196,7 +203,7 @@ public class Request implements Serializable {
                 ", extras=" + extras +
                 ", priority=" + priority +
                 ", headers=" + headers +
-                ", cookies="+ cookies+
+                ", cookies=" + cookies +
                 '}';
     }
 

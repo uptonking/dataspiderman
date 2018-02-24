@@ -1,14 +1,16 @@
 package us.codecraft.webmagic;
 
 /**
+ * 爬虫成功和失败的事件监听器接口
+ * <p>
  * Listener of Spider on page processing. Used for monitor and such on.
  *
  * @author code4crafer@gmail.com
  * @since 0.5.0
  */
-public interface SpiderListener {
+ public interface SpiderListener {
 
-    public void onSuccess(Request request);
+     void onSuccess(Request request);
 
-    public void onError(Request request);
+     void onError(Request request);
 }

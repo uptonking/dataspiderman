@@ -1,9 +1,11 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.selectable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 可抽取的纯文本
+ * <p>
  * Selectable plain text.<br>
  * Can not be selected by XPath or CSS Selector.
  *
@@ -34,22 +36,22 @@ public class PlainText extends AbstractSelectable {
 
     @Override
     public Selectable $(String selector) {
-		throw new UnsupportedOperationException("$ can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
+        throw new UnsupportedOperationException("$ can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
     }
 
     @Override
     public Selectable $(String selector, String attrName) {
-		throw new UnsupportedOperationException("$ can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
+        throw new UnsupportedOperationException("$ can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
     }
 
     @Override
     public Selectable smartContent() {
-		throw new UnsupportedOperationException("Smart content can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
+        throw new UnsupportedOperationException("Smart content can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
     }
 
     @Override
     public Selectable links() {
-		throw new UnsupportedOperationException("Links can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
+        throw new UnsupportedOperationException("Links can not apply to plain text. Please check whether you use a previous xpath with attribute select (/@href etc).");
     }
 
     @Override

@@ -7,6 +7,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * 爬虫计数器
+ * <p>
  * Thread pool for workers.<br><br>
  * Use {@link java.util.concurrent.ExecutorService} as inner implement. <br><br>
  * New feature: <br><br>
@@ -50,8 +52,12 @@ public class CountableThreadPool {
 
     private ExecutorService executorService;
 
+    /**
+     * 在新线程中运行runnable任务
+     *
+     * @param runnable 多线程任务
+     */
     public void execute(final Runnable runnable) {
-
 
         if (threadAlive.get() >= threadNum) {
             try {
@@ -66,7 +72,10 @@ public class CountableThreadPool {
                 reentrantLock.unlock();
             }
         }
+
+        //活动线程数量加1
         threadAlive.incrementAndGet();
+
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -75,6 +84,8 @@ public class CountableThreadPool {
                 } finally {
                     try {
                         reentrantLock.lock();
+
+                        //活动线程数量减1
                         threadAlive.decrementAndGet();
                         condition.signal();
                     } finally {

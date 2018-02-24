@@ -24,7 +24,7 @@ public @interface ExtractBy {
     /**
      * types of extractor expressions
      */
-    public static enum Type {XPath, Regex, Css, JsonPath}
+    enum Type {XPath, Regex, Css, JsonPath}
 
     /**
      * Extractor type, support XPath, CSS Selector and regex.
@@ -44,7 +44,7 @@ public @interface ExtractBy {
     /**
      * types of source for extracting.
      */
-    public static enum Source {
+    enum Source {
         /**
          * extract from the content extracted by class extractor
          */

@@ -7,11 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 智能抽取可读性强的内容
+ * <p>
  * Borrowed from https://code.google.com/p/cx-extractor/
  *
  * @author code4crafter@gmail.com <br>
  * @since 0.4.1
- *
  */
 @Experimental
 public class SmartContentSelector implements Selector {
@@ -21,15 +22,25 @@ public class SmartContentSelector implements Selector {
 
     @Override
     public String select(String html) {
+
         html = html.replaceAll("(?is)<!DOCTYPE.*?>", "");
-        html = html.replaceAll("(?is)<!--.*?-->", "");				// remove html comment
-        html = html.replaceAll("(?is)<script.*?>.*?</script>", ""); // remove javascript
-        html = html.replaceAll("(?is)<style.*?>.*?</style>", "");   // remove css
-        html = html.replaceAll("&.{2,5};|&#.{2,5};", " ");			// remove special char
+
+        // remove html comment
+        html = html.replaceAll("(?is)<!--.*?-->", "");
+
+        // remove javascript
+        html = html.replaceAll("(?is)<script.*?>.*?</script>", "");
+
+        // remove css
+        html = html.replaceAll("(?is)<style.*?>.*?</style>", "");
+
+        // remove special char
+        html = html.replaceAll("&.{2,5};|&#.{2,5};", " ");
+
         html = html.replaceAll("(?is)<.*?>", "");
         List<String> lines;
-        int blocksWidth =3;
-        int threshold =86;
+        int blocksWidth = 3;
+        int threshold = 86;
         int start;
         int end;
         StringBuilder text = new StringBuilder();
@@ -46,23 +57,24 @@ public class SmartContentSelector implements Selector {
             indexDistribution.add(wordsNum);
         }
 
-        start = -1; end = -1;
+        start = -1;
+        end = -1;
         boolean boolstart = false, boolend = false;
         text.setLength(0);
 
         for (int i = 0; i < indexDistribution.size() - 1; i++) {
-            if (indexDistribution.get(i) > threshold && ! boolstart) {
-                if (indexDistribution.get(i+1).intValue() != 0
-                        || indexDistribution.get(i+2).intValue() != 0
-                        || indexDistribution.get(i+3).intValue() != 0) {
+            if (indexDistribution.get(i) > threshold && !boolstart) {
+                if (indexDistribution.get(i + 1) != 0
+                        || indexDistribution.get(i + 2) != 0
+                        || indexDistribution.get(i + 3) != 0) {
                     boolstart = true;
                     start = i;
                     continue;
                 }
             }
             if (boolstart) {
-                if (indexDistribution.get(i).intValue() == 0
-                        || indexDistribution.get(i+1).intValue() == 0) {
+                if (indexDistribution.get(i) == 0
+                        || indexDistribution.get(i + 1) == 0) {
                     end = i;
                     boolend = true;
                 }
@@ -76,7 +88,7 @@ public class SmartContentSelector implements Selector {
                 }
                 String str = tmp.toString();
                 //System.out.println(str);
-                if (str.contains("Copyright")   ) continue;
+                if (str.contains("Copyright")) continue;
                 text.append(str);
                 boolstart = boolend = false;
             }

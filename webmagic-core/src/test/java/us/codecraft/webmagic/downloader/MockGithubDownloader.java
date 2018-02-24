@@ -4,7 +4,7 @@ import org.apache.commons.io.IOUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Task;
-import us.codecraft.webmagic.selector.PlainText;
+import us.codecraft.webmagic.selector.selectable.PlainText;
 
 import java.io.IOException;
 import java.io.InputStream;

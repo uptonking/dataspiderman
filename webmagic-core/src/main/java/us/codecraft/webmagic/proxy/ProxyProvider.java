@@ -4,26 +4,31 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Task;
 
 /**
- * Proxy provider. <br>
- *     
+ * 代理提供者
+ * <p>
+ * Proxy provider
+ *
  * @since 0.7.0
  */
 public interface ProxyProvider {
 
     /**
-     *
+     * 将用完后的代理返回代理池
      * Return proxy to Provider when complete a download.
+     *
      * @param proxy the proxy config contains host,port and identify info
-     * @param page the download result
-     * @param task the download task
+     * @param page  the download result
+     * @param task  the download task
      */
     void returnProxy(Proxy proxy, Page page, Task task);
 
     /**
+     * 为爬虫任务获取代理对象
      * Get a proxy for task by some strategy.
+     *
      * @param task the download task
-     * @return proxy 
+     * @return proxy
      */
     Proxy getProxy(Task task);
-    
+
 }

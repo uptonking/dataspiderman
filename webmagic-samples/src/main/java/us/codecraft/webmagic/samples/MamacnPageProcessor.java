@@ -6,7 +6,7 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.samples.pipeline.OneFilePipeline;
 import us.codecraft.webmagic.scheduler.FileCacheQueueScheduler;
-import us.codecraft.webmagic.selector.Selectable;
+import us.codecraft.webmagic.selector.selectable.Selectable;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;

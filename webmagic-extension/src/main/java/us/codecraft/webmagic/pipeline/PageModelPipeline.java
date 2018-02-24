@@ -10,6 +10,6 @@ import us.codecraft.webmagic.Task;
  */
 public interface PageModelPipeline<T> {
 
-    public void process(T t, Task task);
+      void process(T t, Task task);
 
 }

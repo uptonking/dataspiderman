@@ -5,6 +5,8 @@ import us.codecraft.webmagic.utils.HttpConstant;
 import java.util.*;
 
 /**
+ * 网站爬虫时，http协议相关设置bean
+ * <p>
  * Object contains setting for crawler.<br>
  *
  * @author code4crafter@gmail.com <br>
@@ -12,6 +14,8 @@ import java.util.*;
  * @since 0.1.0
  */
 public class Site {
+
+    private Map<String, String> headers = new HashMap<String, String>();
 
     private String domain;
 
@@ -23,31 +27,32 @@ public class Site {
 
     private String charset;
 
-    private int sleepTime = 5000;
-
-    private int retryTimes = 0;
-
-    private int cycleRetryTimes = 0;
-
-    private int retrySleepTime = 1000;
-
     private int timeOut = 5000;
 
     private static final Set<Integer> DEFAULT_STATUS_CODE_SET = new HashSet<Integer>();
-
     private Set<Integer> acceptStatCode = DEFAULT_STATUS_CODE_SET;
-
-    private Map<String, String> headers = new HashMap<String, String>();
-
-    private boolean useGzip = true;
-
-    private boolean disableCookieManagement = false;
 
     static {
         DEFAULT_STATUS_CODE_SET.add(HttpConstant.StatusCode.CODE_200);
     }
 
+    private boolean useGzip = true;
+
+    private boolean disableCookieManagement = false;
+
+    private int sleepTime = 5000;
+
+    private int retryTimes = 0;
     /**
+     * 下载失败时的重试次数，默认不重试
+     */
+    private int cycleRetryTimes = 0;
+
+    private int retrySleepTime = 1000;
+
+    /**
+     * 创建site对象
+     * 使用默认的无参构造函数
      * new a Site
      *
      * @return new site
@@ -57,9 +62,10 @@ public class Site {
     }
 
     /**
+     * 添加cookie，不指定domain
      * Add a cookie with domain {@link #getDomain()}
      *
-     * @param name name
+     * @param name  name
      * @param value value
      * @return this
      */
@@ -69,19 +75,49 @@ public class Site {
     }
 
     /**
+     * 为指定domain添加cookie
      * Add a cookie with specific domain.
      *
      * @param domain domain
-     * @param name name
-     * @param value value
+     * @param name   name
+     * @param value  value
      * @return this
      */
     public Site addCookie(String domain, String name, String value) {
-        if (!cookies.containsKey(domain)){
-            cookies.put(domain,new HashMap<String, String>());
+        if (!cookies.containsKey(domain)) {
+            cookies.put(domain, new HashMap<String, String>());
         }
         cookies.get(domain).put(name, value);
         return this;
+    }
+
+    /**
+     * 获取默认cookies
+     * get cookies
+     *
+     * @return get cookies
+     */
+    public Map<String, String> getCookies() {
+        return defaultCookies;
+    }
+
+    /**
+     * 获取所有domain的cookies
+     * get cookies of all domains
+     *
+     * @return get cookies
+     */
+    public Map<String, Map<String, String>> getAllCookies() {
+        return cookies;
+    }
+
+    /**
+     * get user agent
+     *
+     * @return user agent
+     */
+    public String getUserAgent() {
+        return userAgent;
     }
 
     /**
@@ -93,33 +129,6 @@ public class Site {
     public Site setUserAgent(String userAgent) {
         this.userAgent = userAgent;
         return this;
-    }
-
-    /**
-     * get cookies
-     *
-     * @return get cookies
-     */
-    public Map<String, String> getCookies() {
-        return defaultCookies;
-    }
-
-    /**
-     * get cookies of all domains
-     *
-     * @return get cookies
-     */
-    public Map<String,Map<String, String>> getAllCookies() {
-        return cookies;
-    }
-
-    /**
-     * get user agent
-     *
-     * @return user agent
-     */
-    public String getUserAgent() {
-        return userAgent;
     }
 
     /**
@@ -143,6 +152,15 @@ public class Site {
     }
 
     /**
+     * get charset set manually
+     *
+     * @return charset
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
      * Set charset of page manually.<br>
      * When charset is not set or set to null, it can be auto detected by Http header.
      *
@@ -152,15 +170,6 @@ public class Site {
     public Site setCharset(String charset) {
         this.charset = charset;
         return this;
-    }
-
-    /**
-     * get charset set manually
-     *
-     * @return charset
-     */
-    public String getCharset() {
-        return charset;
     }
 
     public int getTimeOut() {
@@ -223,15 +232,6 @@ public class Site {
         return sleepTime;
     }
 
-    /**
-     * Get retry times immediately when download fail, 0 by default.<br>
-     *
-     * @return retry times when download fail
-     */
-    public int getRetryTimes() {
-        return retryTimes;
-    }
-
     public Map<String, String> getHeaders() {
         return headers;
     }
@@ -247,6 +247,15 @@ public class Site {
     public Site addHeader(String key, String value) {
         headers.put(key, value);
         return this;
+    }
+
+    /**
+     * Get retry times immediately when download fail, 0 by default.<br>
+     *
+     * @return retry times when download fail
+     */
+    public int getRetryTimes() {
+        return retryTimes;
     }
 
     /**
@@ -280,9 +289,6 @@ public class Site {
         return this;
     }
 
-    public boolean isUseGzip() {
-        return useGzip;
-    }
 
     public int getRetrySleepTime() {
         return retrySleepTime;
@@ -297,6 +303,10 @@ public class Site {
     public Site setRetrySleepTime(int retrySleepTime) {
         this.retrySleepTime = retrySleepTime;
         return this;
+    }
+
+    public boolean isUseGzip() {
+        return useGzip;
     }
 
     /**
@@ -319,30 +329,13 @@ public class Site {
      * Downloader is supposed to store response cookie.
      * Disable it to ignore all cookie fields and stay clean.
      * Warning: Set cookie will still NOT work if disableCookieManagement is true.
+     *
      * @param disableCookieManagement disableCookieManagement
      * @return this
      */
     public Site setDisableCookieManagement(boolean disableCookieManagement) {
         this.disableCookieManagement = disableCookieManagement;
         return this;
-    }
-
-    public Task toTask() {
-        return new Task() {
-            @Override
-            public String getUUID() {
-                String uuid = Site.this.getDomain();
-                if (uuid == null) {
-                    uuid = UUID.randomUUID().toString();
-                }
-                return uuid;
-            }
-
-            @Override
-            public Site getSite() {
-                return Site.this;
-            }
-        };
     }
 
     @Override
@@ -397,6 +390,28 @@ public class Site {
                 ", acceptStatCode=" + acceptStatCode +
                 ", headers=" + headers +
                 '}';
+    }
+
+    /**
+     * 根据domain生成uuid，从而创建Task对象
+     */
+    public Task toTask() {
+
+        return new Task() {
+            @Override
+            public String getUUID() {
+                String uuid = Site.this.getDomain();
+                if (uuid == null) {
+                    uuid = UUID.randomUUID().toString();
+                }
+                return uuid;
+            }
+
+            @Override
+            public Site getSite() {
+                return Site.this;
+            }
+        };
     }
 
 }

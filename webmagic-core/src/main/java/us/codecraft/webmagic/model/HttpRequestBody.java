@@ -11,23 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * http请求body对象bean
+ *
  * @author code4crafter@gmail.com
- *         Date: 17/4/8
+ * Date: 17/4/8
  */
 public class HttpRequestBody implements Serializable {
 
     private static final long serialVersionUID = 5659170945717023595L;
-
-    public static abstract class ContentType {
-
-        public static final String JSON = "application/json";
-
-        public static final String XML = "text/xml";
-
-        public static final String FORM = "application/x-www-form-urlencoded";
-
-        public static final String MULTIPART = "multipart/form-data";
-    }
 
     private byte[] body;
 
@@ -44,26 +35,9 @@ public class HttpRequestBody implements Serializable {
         this.encoding = encoding;
     }
 
-    public String getContentType() {
-        return contentType;
-    }
-
-    public String getEncoding() {
-        return encoding;
-    }
-
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
-
+    /**
+     * 设置请求body字段为json内容
+     */
     public static HttpRequestBody json(String json, String encoding) {
         try {
             return new HttpRequestBody(json.getBytes(encoding), ContentType.JSON, encoding);
@@ -72,6 +46,9 @@ public class HttpRequestBody implements Serializable {
         }
     }
 
+    /**
+     * 设置请求body字段为xml内容
+     */
     public static HttpRequestBody xml(String xml, String encoding) {
         try {
             return new HttpRequestBody(xml.getBytes(encoding), ContentType.XML, encoding);
@@ -80,11 +57,10 @@ public class HttpRequestBody implements Serializable {
         }
     }
 
-    public static HttpRequestBody custom(byte[] body, String contentType, String encoding) {
-        return new HttpRequestBody(body, contentType, encoding);
-    }
-
-    public static HttpRequestBody form(Map<String,Object> params, String encoding){
+    /**
+     * 设置请求body字段为json内容
+     */
+    public static HttpRequestBody form(Map<String, Object> params, String encoding) {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(params.size());
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             nameValuePairs.add(new BasicNameValuePair(entry.getKey(), String.valueOf(entry.getValue())));
@@ -96,7 +72,48 @@ public class HttpRequestBody implements Serializable {
         }
     }
 
+    /**
+     * 设置请求body字段内容为自定义格式
+     */
+    public static HttpRequestBody custom(byte[] body, String contentType, String encoding) {
+        return new HttpRequestBody(body, contentType, encoding);
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
     public byte[] getBody() {
         return body;
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
+
+    /**
+     * http请求的ContentType类型的常用值常量
+     */
+    public static abstract class ContentType {
+
+        public static final String JSON = "application/json";
+
+        public static final String XML = "text/xml";
+
+        public static final String FORM = "application/x-www-form-urlencoded";
+
+        public static final String MULTIPART = "multipart/form-data";
     }
 }

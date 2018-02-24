@@ -2,6 +2,7 @@ package us.codecraft.webmagic.selector;
 
 import org.jsoup.Jsoup;
 import org.junit.Test;
+import us.codecraft.webmagic.selector.element.LinksSelector;
 
 import java.util.List;
 

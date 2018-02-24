@@ -4,6 +4,8 @@ import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Task;
 
 /**
+ * url地址管理接口
+ * <p>
  * Scheduler is the part of url management.<br>
  * You can implement interface Scheduler to do:
  * manage urls to fetch
@@ -15,19 +17,21 @@ import us.codecraft.webmagic.Task;
 public interface Scheduler {
 
     /**
+     * 添加
      * add a url to fetch
      *
      * @param request request
-     * @param task task
+     * @param task    task
      */
-    public void push(Request request, Task task);
+    void push(Request request, Task task);
 
     /**
+     * 取出
      * get an url to crawl
      *
      * @param task the task of spider
      * @return the url to crawl
      */
-    public Request poll(Task task);
+    Request poll(Task task);
 
 }

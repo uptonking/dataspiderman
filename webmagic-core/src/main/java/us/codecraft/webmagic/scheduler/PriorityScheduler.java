@@ -11,7 +11,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * Priority scheduler. Request with higher priority will poll earlier. <br>
+ * 用于管理请求url地址的优先队列
+ * <p>
+ * Priority scheduler.
+ * Request with higher priority will poll earlier. <br>
  *
  * @author code4crafter@gmail.com <br>
  * @since 0.2.1
@@ -19,11 +22,20 @@ import java.util.concurrent.PriorityBlockingQueue;
 @ThreadSafe
 public class PriorityScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler {
 
-    public static final int INITIAL_CAPACITY = 5;
-
+    /**
+     * 普通队列，非优先队列
+     */
     private BlockingQueue<Request> noPriorityQueue = new LinkedBlockingQueue<Request>();
 
+    /**
+     * 优先队列元素个数
+     */
+    private static final int INITIAL_CAPACITY = 5;
+    /**
+     * 优先队列
+     */
     private PriorityBlockingQueue<Request> priorityQueuePlus = new PriorityBlockingQueue<Request>(INITIAL_CAPACITY, new Comparator<Request>() {
+
         @Override
         public int compare(Request o1, Request o2) {
             return -NumberUtils.compareLong(o1.getPriority(), o2.getPriority());
@@ -37,6 +49,9 @@ public class PriorityScheduler extends DuplicateRemovedScheduler implements Moni
         }
     });
 
+    /**
+     * 加入元素
+     */
     @Override
     public void pushWhenNoDuplicate(Request request, Task task) {
         if (request.getPriority() == 0) {
@@ -48,6 +63,9 @@ public class PriorityScheduler extends DuplicateRemovedScheduler implements Moni
         }
     }
 
+    /**
+     * 取出元素
+     */
     @Override
     public synchronized Request poll(Task task) {
         Request poll = priorityQueuePlus.poll();

@@ -2,8 +2,8 @@ package us.codecraft.webmagic;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import us.codecraft.webmagic.selector.Html;
-import us.codecraft.webmagic.selector.Selectable;
+import us.codecraft.webmagic.selector.selectable.Html;
+import us.codecraft.webmagic.selector.selectable.Selectable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

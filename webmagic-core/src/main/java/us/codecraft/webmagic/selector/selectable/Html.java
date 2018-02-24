@@ -1,15 +1,20 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.selectable;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.selector.ElementSelector;
+import us.codecraft.webmagic.selector.Selector;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * 抽取HTML
+ * 基于Jsoup
+ * <p>
  * Selectable html.<br>
  *
  * @author code4crafter@gmail.com <br>
@@ -17,15 +22,18 @@ import java.util.List;
  */
 public class Html extends HtmlNode {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-	/**
-	 * Disable jsoup html entity escape. It can be set just before any Html instance is created.
-     * @deprecated
-	 */
-	public static boolean DISABLE_HTML_ENTITY_ESCAPE = false;
+    private static Logger logger = LoggerFactory.getLogger(Html.class);
 
     /**
+     * Disable jsoup html entity escape. It can be set just before any Html instance is created.
+     *
+     * @deprecated
+     */
+    @Deprecated
+    public static boolean DISABLE_HTML_ENTITY_ESCAPE = false;
+
+    /**
+     * 解析后的document
      * Store parsed document for better performance when only one text exist.
      */
     private Document document;

@@ -1,9 +1,9 @@
 package us.codecraft.webmagic;
 
 import org.apache.commons.lang3.StringUtils;
-import us.codecraft.webmagic.selector.Html;
-import us.codecraft.webmagic.selector.Json;
-import us.codecraft.webmagic.selector.Selectable;
+import us.codecraft.webmagic.selector.selectable.Html;
+import us.codecraft.webmagic.selector.selectable.Json;
+import us.codecraft.webmagic.selector.selectable.Selectable;
 import us.codecraft.webmagic.utils.HttpConstant;
 import us.codecraft.webmagic.utils.UrlUtils;
 
@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 下载完成得到的对象bean
+ * 可以是html、json、其他文本格式
+ * <p>
  * Object storing extracted result and urls to fetch.<br>
  * Not thread safe.<br>
  * Main method：                                               <br>
@@ -30,38 +33,53 @@ import java.util.Map;
 public class Page {
 
     private Request request;
-
+    /**
+     * 页面解析结果
+     */
     private ResultItems resultItems = new ResultItems();
 
     private Html html;
-
     private Json json;
-
     private String rawText;
 
     private Selectable url;
 
-    private Map<String,List<String>> headers;
+    private Map<String, List<String>> headers;
 
     private int statusCode = HttpConstant.StatusCode.CODE_200;
 
+    private String charset;
+
+    /**
+     * 页面是否下载成功的标识
+     */
     private boolean downloadSuccess = true;
 
     private byte[] bytes;
 
+    /**
+     * 请求地址列表
+     */
     private List<Request> targetRequests = new ArrayList<Request>();
 
-    private String charset;
-    
+
     public Page() {
     }
 
-    public static Page fail(){
+    /**
+     * 设置page下载状态为失败
+     */
+    public static Page fail() {
         Page page = new Page();
         page.setDownloadSuccess(false);
         return page;
     }
 
+    /**
+     * 设置解析结果是否要跳过被pipeline处理
+     *
+     * @param skip 是否跳过处理，true则跳过，即不处理
+     */
     public Page setSkip(boolean skip) {
         resultItems.setSkip(skip);
         return this;
@@ -69,9 +87,10 @@ public class Page {
     }
 
     /**
+     * 添加页面解析到的结果kv
      * store extract results
      *
-     * @param key key
+     * @param key   key
      * @param field field
      */
     public void putField(String key, Object field) {
@@ -91,6 +110,15 @@ public class Page {
     }
 
     /**
+     * @param html html
+     * @deprecated since 0.4.0
+     * The html is parse just when first time of calling {@link #getHtml()}, so use {@link #setRawText(String)} instead.
+     */
+    public void setHtml(Html html) {
+        this.html = html;
+    }
+
+    /**
      * get json content of page
      *
      * @return json
@@ -103,20 +131,12 @@ public class Page {
         return json;
     }
 
-    /**
-     * @param html html
-     * @deprecated since 0.4.0
-     * The html is parse just when first time of calling {@link #getHtml()}, so use {@link #setRawText(String)} instead.
-     */
-    public void setHtml(Html html) {
-        this.html = html;
-    }
-
     public List<Request> getTargetRequests() {
         return targetRequests;
     }
 
     /**
+     * 添加请求地址列表
      * add urls to fetch
      *
      * @param requests requests
@@ -132,6 +152,7 @@ public class Page {
     }
 
     /**
+     * 添加请求地址列表，带优先级
      * add urls to fetch
      *
      * @param requests requests
@@ -148,6 +169,7 @@ public class Page {
     }
 
     /**
+     * 添加单个请求地址
      * add url to fetch
      *
      * @param requestString requestString
@@ -161,6 +183,7 @@ public class Page {
     }
 
     /**
+     * 添加单个请求地址
      * add requests to fetch
      *
      * @param request request

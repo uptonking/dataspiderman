@@ -18,14 +18,14 @@ public interface MultiPageModel {
      *
      * @return page key
      */
-    public String getPageKey();
+     String getPageKey();
 
     /**
      * page is the identifier of a page in pages for one object.
      *
      * @return page
      */
-    public String getPage();
+     String getPage();
 
     /**
      * other pages to be extracted.<br>
@@ -33,7 +33,7 @@ public interface MultiPageModel {
      *
      * @return other pages
      */
-    public Collection<String> getOtherPages();
+     Collection<String> getOtherPages();
 
     /**
      * Combine multiPageModels to a whole object.
@@ -41,6 +41,6 @@ public interface MultiPageModel {
      * @param multiPageModel multiPageModel
      * @return multiPageModel combined
      */
-    public MultiPageModel combine(MultiPageModel multiPageModel);
+     MultiPageModel combine(MultiPageModel multiPageModel);
 
 }

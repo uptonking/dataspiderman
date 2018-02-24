@@ -6,7 +6,7 @@ import us.codecraft.webmagic.Request;
  * @author code4crafer@gmail.com
  * @since 0.5.0
  */
-public interface RequestMatcher {
+ public interface RequestMatcher {
 
     /**
      * Check whether to process the page.<br><br>
@@ -16,9 +16,9 @@ public interface RequestMatcher {
      *
      * @return whether matches
      */
-    public boolean match(Request page);
+     boolean match(Request page);
 
-    public enum MatchOther {
+     enum MatchOther {
         YES, NO
     }
 }

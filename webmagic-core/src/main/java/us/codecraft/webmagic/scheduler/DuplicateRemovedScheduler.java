@@ -9,6 +9,8 @@ import us.codecraft.webmagic.scheduler.component.HashSetDuplicateRemover;
 import us.codecraft.webmagic.utils.HttpConstant;
 
 /**
+ * 默认去重的请求url管理器 抽象类
+ * <p>
  * Remove duplicate urls and only push urls which are not duplicate.<br><br>
  *
  * @author code4crafer@gmail.com
@@ -16,7 +18,7 @@ import us.codecraft.webmagic.utils.HttpConstant;
  */
 public abstract class DuplicateRemovedScheduler implements Scheduler {
 
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    protected static Logger logger = LoggerFactory.getLogger(DuplicateRemovedScheduler.class);
 
     private DuplicateRemover duplicatedRemover = new HashSetDuplicateRemover();
 
@@ -29,11 +31,18 @@ public abstract class DuplicateRemovedScheduler implements Scheduler {
         return this;
     }
 
+    /**
+     * 加入请求队列时检查重复
+     *
+     * @param request request
+     * @param task    task
+     */
     @Override
     public void push(Request request, Task task) {
         logger.trace("get a candidate url {}", request.getUrl());
         if (shouldReserved(request) || noNeedToRemoveDuplicate(request) || !duplicatedRemover.isDuplicate(request, task)) {
             logger.debug("push to queue {}", request.getUrl());
+
             pushWhenNoDuplicate(request, task);
         }
     }
@@ -46,6 +55,11 @@ public abstract class DuplicateRemovedScheduler implements Scheduler {
         return HttpConstant.Method.POST.equalsIgnoreCase(request.getMethod());
     }
 
+    /**
+     *
+     * @param request
+     * @param task
+     */
     protected void pushWhenNoDuplicate(Request request, Task task) {
 
     }

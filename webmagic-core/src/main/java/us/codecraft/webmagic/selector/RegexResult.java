@@ -1,6 +1,8 @@
 package us.codecraft.webmagic.selector;
 
 /**
+ * 正则匹配的结果
+ * <p>
  * Object contains regex results.<br>
  * For multi group result extension.<br>
  *
@@ -9,9 +11,10 @@ package us.codecraft.webmagic.selector;
  */
 class RegexResult {
 
+    public static final RegexResult EMPTY_RESULT = new RegexResult();
+
     private String[] groups;
 
-    public static final RegexResult EMPTY_RESULT = new RegexResult();
 
     public RegexResult() {
 

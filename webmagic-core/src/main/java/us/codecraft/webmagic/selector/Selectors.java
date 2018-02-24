@@ -1,6 +1,12 @@
 package us.codecraft.webmagic.selector;
 
+import us.codecraft.webmagic.selector.element.CssSelector;
+import us.codecraft.webmagic.selector.element.XpathSelector;
+
 /**
+ * 抽取器抽象类
+ * 作为工具类
+ * <p>
  * Convenient methods for selectors.<br>
  *
  * @author code4crafter@gmail.com <br>
@@ -13,7 +19,7 @@ public abstract class Selectors {
     }
 
     public static RegexSelector regex(String expr, int group) {
-        return new RegexSelector(expr,group);
+        return new RegexSelector(expr, group);
     }
 
     public static SmartContentSelector smartContent() {
@@ -33,9 +39,9 @@ public abstract class Selectors {
     }
 
     /**
-     * @see #xpath(String)
      * @param expr expr
      * @return new selector
+     * @see #xpath(String)
      */
     @Deprecated
     public static XpathSelector xsoup(String expr) {

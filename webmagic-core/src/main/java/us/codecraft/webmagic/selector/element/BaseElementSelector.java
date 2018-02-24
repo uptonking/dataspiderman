@@ -1,12 +1,17 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.element;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import us.codecraft.webmagic.selector.ElementSelector;
+import us.codecraft.webmagic.selector.Selector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 通用抽取器抽象类
+ * 可同时处理text和html
+ *
  * @author code4crafter@gmail.com
  * @since 0.3.0
  */

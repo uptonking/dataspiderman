@@ -8,6 +8,7 @@ import us.codecraft.webmagic.model.annotation.*;
 import us.codecraft.webmagic.model.formatter.ObjectFormatter;
 import us.codecraft.webmagic.model.formatter.ObjectFormatterBuilder;
 import us.codecraft.webmagic.selector.*;
+import us.codecraft.webmagic.selector.element.XpathSelector;
 import us.codecraft.webmagic.utils.ClassUtils;
 import us.codecraft.webmagic.utils.ExtractorUtils;
 

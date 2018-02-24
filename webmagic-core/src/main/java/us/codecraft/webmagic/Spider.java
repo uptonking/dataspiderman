@@ -28,9 +28,12 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * Spider是webmagic的爬虫入口类，负责组件初始化、控制爬虫启停
+ * <p>
+ * Downloader、PageProcessor、Scheduler、Pipeline都是Spider的属性
+ * <p>
  * Entrance of a crawler.<br>
- * A spider contains four modules: Downloader, Scheduler, PageProcessor and
- * Pipeline.<br>
+ * A spider contains four modules: Downloader, Scheduler, PageProcessor and * Pipeline.<br>
  * Every module is a field of Spider. <br>
  * The modules are defined in interface. <br>
  * You can customize a spider with various implementations of them. <br>
@@ -60,44 +63,51 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Spider implements Runnable, Task {
 
-    protected Downloader downloader;
+    private static Logger logger = LoggerFactory.getLogger(Spider.class);
 
-    protected List<Pipeline> pipelines = new ArrayList<Pipeline>();
+    /**
+     * 爬虫运行状态常量
+     */
+    private final static int STAT_INIT = 0;
+    private final static int STAT_RUNNING = 1;
+    private final static int STAT_STOPPED = 2;
 
-    protected PageProcessor pageProcessor;
+    private Downloader downloader;
 
-    protected List<Request> startRequests;
+    private PageProcessor pageProcessor;
 
-    protected Site site;
+    private List<Pipeline> pipelines = new ArrayList<Pipeline>();
 
-    protected String uuid;
+    private Scheduler scheduler = new QueueScheduler();
+    /**
+     * 爬虫初始url地址
+     */
+    private List<Request> startRequests;
 
-    protected Scheduler scheduler = new QueueScheduler();
+    private Site site;
+    /**
+     * 任务id
+     */
+    private String uuid;
+    /**
+     * 爬虫计数器
+     */
+    private CountableThreadPool threadPool;
 
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    private ExecutorService executorService;
 
-    protected CountableThreadPool threadPool;
+    private int threadNum = 1;
+    /**
+     * 爬虫运行状态
+     */
+    private AtomicInteger stat = new AtomicInteger(STAT_INIT);
 
-    protected ExecutorService executorService;
+    private boolean exitWhenComplete = true;
+    private boolean destroyWhenExit = true;
 
-    protected int threadNum = 1;
-
-    protected AtomicInteger stat = new AtomicInteger(STAT_INIT);
-
-    protected boolean exitWhenComplete = true;
-
-    protected final static int STAT_INIT = 0;
-
-    protected final static int STAT_RUNNING = 1;
-
-    protected final static int STAT_STOPPED = 2;
-
-    protected boolean spawnUrl = true;
-
-    protected boolean destroyWhenExit = true;
+    private boolean spawnUrl = true;
 
     private ReentrantLock newUrlLock = new ReentrantLock();
-
     private Condition newUrlCondition = newUrlLock.newCondition();
 
     private List<SpiderListener> spiderListeners;
@@ -109,6 +119,7 @@ public class Spider implements Runnable, Task {
     private int emptySleepTime = 30000;
 
     /**
+     * 传入PageProcessor创建并初始化Spider
      * create a spider with pageProcessor.
      *
      * @param pageProcessor pageProcessor
@@ -120,6 +131,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 传入PageProcessor初始化Spider
      * create a spider with pageProcessor.
      *
      * @param pageProcessor pageProcessor
@@ -130,6 +142,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 设置初始爬虫url地址
      * Set startUrls of Spider.<br>
      * Prior to startUrls of Site.
      *
@@ -143,6 +156,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 设置初始爬虫url地址
      * Set startUrls of Spider.<br>
      * Prior to startUrls of Site.
      *
@@ -156,6 +170,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 设置爬虫uuid
      * Set an uuid for spider.<br>
      * Default uuid is domain of site.<br>
      *
@@ -180,6 +195,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 设置scheduler
      * set scheduler for Spider
      *
      * @param scheduler scheduler
@@ -206,13 +222,14 @@ public class Spider implements Runnable, Task {
      * @param pipeline pipeline
      * @return this
      * @see #addPipeline(us.codecraft.webmagic.pipeline.Pipeline)
-     * @deprecated
      */
+    @Deprecated
     public Spider pipeline(Pipeline pipeline) {
         return addPipeline(pipeline);
     }
 
     /**
+     * 添加pipeline
      * add a pipeline for Spider
      *
      * @param pipeline pipeline
@@ -227,6 +244,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 直接设置pipeline
      * set pipelines for Spider
      *
      * @param pipelines pipelines
@@ -241,6 +259,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 删除所有pipeline
      * clear the pipelines set
      *
      * @return this
@@ -256,13 +275,14 @@ public class Spider implements Runnable, Task {
      * @param downloader downloader
      * @return this
      * @see #setDownloader(us.codecraft.webmagic.downloader.Downloader)
-     * @deprecated
      */
+    @Deprecated
     public Spider downloader(Downloader downloader) {
         return setDownloader(downloader);
     }
 
     /**
+     * 设置Downloader
      * set the downloader of spider
      *
      * @param downloader downloader
@@ -275,13 +295,19 @@ public class Spider implements Runnable, Task {
         return this;
     }
 
-    protected void initComponent() {
+    /**
+     * 初始化组件
+     * 包括downloader，pipelines
+     */
+    private void initComponent() {
+
         if (downloader == null) {
             this.downloader = new HttpClientDownloader();
         }
         if (pipelines.isEmpty()) {
             pipelines.add(new ConsolePipeline());
         }
+
         downloader.setThread(threadNum);
         if (threadPool == null || threadPool.isShutdown()) {
             if (executorService != null && !executorService.isShutdown()) {
@@ -290,6 +316,7 @@ public class Spider implements Runnable, Task {
                 threadPool = new CountableThreadPool(threadNum);
             }
         }
+
         if (startRequests != null) {
             for (Request request : startRequests) {
                 addRequest(request);
@@ -299,21 +326,30 @@ public class Spider implements Runnable, Task {
         startTime = new Date();
     }
 
+    /**
+     * 在新线程中运行爬虫任务
+     */
     @Override
     public void run() {
         checkRunningStat();
         initComponent();
-        logger.info("Spider {} started!",getUUID());
+        logger.info("Spider {} started!", getUUID());
+
         while (!Thread.currentThread().isInterrupted() && stat.get() == STAT_RUNNING) {
             final Request request = scheduler.poll(this);
             if (request == null) {
                 if (threadPool.getThreadAlive() == 0 && exitWhenComplete) {
                     break;
                 }
-                // wait until new url added
+
+                // wait until new url added 等待新url，等待时加锁阻塞
                 waitNewUrl();
             } else {
                 threadPool.execute(new Runnable() {
+
+                    /**
+                     * 在新线程中处理下载url
+                     */
                     @Override
                     public void run() {
                         try {
@@ -324,12 +360,15 @@ public class Spider implements Runnable, Task {
                             logger.error("process request " + request + " error", e);
                         } finally {
                             pageCount.incrementAndGet();
+
+                            //释放锁
                             signalNewUrl();
                         }
                     }
                 });
             }
         }
+
         stat.set(STAT_STOPPED);
         // release some resources
         if (destroyWhenExit) {
@@ -338,7 +377,10 @@ public class Spider implements Runnable, Task {
         logger.info("Spider {} closed! {} pages downloaded.", getUUID(), pageCount.get());
     }
 
-    protected void onError(Request request) {
+    /**
+     * 触发爬虫失败的监听器事件
+     */
+    private void onError(Request request) {
         if (CollectionUtils.isNotEmpty(spiderListeners)) {
             for (SpiderListener spiderListener : spiderListeners) {
                 spiderListener.onError(request);
@@ -346,7 +388,10 @@ public class Spider implements Runnable, Task {
         }
     }
 
-    protected void onSuccess(Request request) {
+    /**
+     * 触发爬虫成功的监听器事件
+     */
+    private void onSuccess(Request request) {
         if (CollectionUtils.isNotEmpty(spiderListeners)) {
             for (SpiderListener spiderListener : spiderListeners) {
                 spiderListener.onSuccess(request);
@@ -354,18 +399,28 @@ public class Spider implements Runnable, Task {
         }
     }
 
+    /**
+     * 检查爬虫运行状态，并将爬虫状态置为正在运行
+     * 死循环
+     */
     private void checkRunningStat() {
+
         while (true) {
+
             int statNow = stat.get();
             if (statNow == STAT_RUNNING) {
                 throw new IllegalStateException("Spider is already running!");
             }
+
             if (stat.compareAndSet(statNow, STAT_RUNNING)) {
                 break;
             }
         }
     }
 
+    /**
+     * 爬虫结束时释放资源
+     */
     public void close() {
         destroyEach(downloader);
         destroyEach(pageProcessor);
@@ -387,6 +442,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 测试url的有效性
      * Process specific urls without url discovering.
      *
      * @param urls urls to process
@@ -400,9 +456,12 @@ public class Spider implements Runnable, Task {
         }
     }
 
+    /**
+     * 下载请求的url
+     */
     private void processRequest(Request request) {
         Page page = downloader.download(request, this);
-        if (page.isDownloadSuccess()){
+        if (page.isDownloadSuccess()) {
             onDownloadSuccess(request, page);
         } else {
             onDownloaderFail(request);
@@ -410,7 +469,7 @@ public class Spider implements Runnable, Task {
     }
 
     private void onDownloadSuccess(Request request, Page page) {
-        if (site.getAcceptStatCode().contains(page.getStatusCode())){
+        if (site.getAcceptStatCode().contains(page.getStatusCode())) {
             pageProcessor.process(page);
             extractAndAddRequests(page, spawnUrl);
             if (!page.getResultItems().isSkip()) {
@@ -422,25 +481,30 @@ public class Spider implements Runnable, Task {
             logger.info("page status code error, page {} , code: {}", request.getUrl(), page.getStatusCode());
         }
         sleep(site.getSleepTime());
-        return;
     }
 
     private void onDownloaderFail(Request request) {
         if (site.getCycleRetryTimes() == 0) {
             sleep(site.getSleepTime());
         } else {
-            // for cycle retry
+            // 下载失败时重试，for cycle retry
             doCycleRetry(request);
         }
     }
 
+    /**
+     * 请求下载失败时，循环重试
+     * 默认重复0次，即不重试，见{@link us.codecraft.webmagic.Site#cycleRetryTimes}
+     */
     private void doCycleRetry(Request request) {
         Object cycleTriedTimesObject = request.getExtra(Request.CYCLE_TRIED_TIMES);
+
         if (cycleTriedTimesObject == null) {
             addRequest(SerializationUtils.clone(request).setPriority(0).putExtra(Request.CYCLE_TRIED_TIMES, 1));
         } else {
             int cycleTriedTimes = (Integer) cycleTriedTimesObject;
             cycleTriedTimes++;
+            //重试次数限制
             if (cycleTriedTimes < site.getCycleRetryTimes()) {
                 addRequest(SerializationUtils.clone(request).setPriority(0).putExtra(Request.CYCLE_TRIED_TIMES, cycleTriedTimes));
             }
@@ -448,15 +512,23 @@ public class Spider implements Runnable, Task {
         sleep(site.getRetrySleepTime());
     }
 
-    protected void sleep(int time) {
+    /**
+     * spider所在线程挂起，未释放锁
+     *
+     * @param time 毫秒
+     */
+    private void sleep(int time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
-            logger.error("Thread interrupted when sleep",e);
+            logger.error("Thread interrupted when sleep", e);
         }
     }
 
-    protected void extractAndAddRequests(Page page, boolean spawnUrl) {
+    /**
+     * 从下载的页面中解析 二次爬虫地址，并加入请求队列
+     */
+    private void extractAndAddRequests(Page page, boolean spawnUrl) {
         if (spawnUrl && CollectionUtils.isNotEmpty(page.getTargetRequests())) {
             for (Request request : page.getTargetRequests()) {
                 addRequest(request);
@@ -464,6 +536,9 @@ public class Spider implements Runnable, Task {
         }
     }
 
+    /**
+     * 添加单个请求url
+     */
     private void addRequest(Request request) {
         if (site.getDomain() == null && request != null && request.getUrl() != null) {
             site.setDomain(UrlUtils.getDomain(request.getUrl()));
@@ -471,12 +546,36 @@ public class Spider implements Runnable, Task {
         scheduler.push(request, this);
     }
 
-    protected void checkIfRunning() {
+    /**
+     * 添加多个请求url
+     * Add urls with information to crawl.<br>
+     *
+     * @param requests requests
+     * @return this
+     */
+    public Spider addRequest(Request... requests) {
+        for (Request request : requests) {
+            addRequest(request);
+        }
+        signalNewUrl();
+        return this;
+    }
+
+
+    /**
+     * 检查爬虫是否运行
+     * 若正在运行，则抛出异常
+     * 若未运行，则无动作
+     */
+    private void checkIfRunning() {
         if (stat.get() == STAT_RUNNING) {
             throw new IllegalStateException("Spider is already running!");
         }
     }
 
+    /**
+     * 在新线程中启动本爬虫
+     */
     public void runAsync() {
         Thread thread = new Thread(this);
         thread.setDaemon(false);
@@ -484,6 +583,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 添加爬虫url
      * Add urls to crawl. <br>
      *
      * @param urls urls
@@ -498,16 +598,17 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 同步下载所有url，返回所有解析结果
      * Download urls synchronizing.
      *
      * @param urls urls
-     * @param <T> type of process result
+     * @param <T>  type of process result
      * @return list downloaded
      */
     public <T> List<T> getAll(Collection<String> urls) {
         destroyWhenExit = false;
         spawnUrl = false;
-        if (startRequests!=null){
+        if (startRequests != null) {
             startRequests.clear();
         }
         for (Request request : UrlUtils.convertToRequests(urls)) {
@@ -525,6 +626,9 @@ public class Spider implements Runnable, Task {
         return new ResultItemsCollectorPipeline();
     }
 
+    /**
+     * 返回第1个解析结果
+     */
     public <T> T get(String url) {
         List<String> urls = WMCollections.newArrayList(url);
         List<T> resultItemses = getAll(urls);
@@ -536,19 +640,8 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * Add urls with information to crawl.<br>
-     *
-     * @param requests requests
-     * @return this
+     * 阻塞等待新url
      */
-    public Spider addRequest(Request... requests) {
-        for (Request request : requests) {
-            addRequest(request);
-        }
-        signalNewUrl();
-        return this;
-    }
-
     private void waitNewUrl() {
         newUrlLock.lock();
         try {
@@ -564,6 +657,9 @@ public class Spider implements Runnable, Task {
         }
     }
 
+    /**
+     * 释放等待新url的锁
+     */
     private void signalNewUrl() {
         try {
             newUrlLock.lock();
@@ -577,6 +673,9 @@ public class Spider implements Runnable, Task {
         runAsync();
     }
 
+    /**
+     * 停止爬虫
+     */
     public void stop() {
         if (stat.compareAndSet(STAT_RUNNING, STAT_STOPPED)) {
             logger.info("Spider " + getUUID() + " stop success!");
@@ -586,59 +685,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * start with more than one threads
-     *
-     * @param threadNum threadNum
-     * @return this
-     */
-    public Spider thread(int threadNum) {
-        checkIfRunning();
-        this.threadNum = threadNum;
-        if (threadNum <= 0) {
-            throw new IllegalArgumentException("threadNum should be more than one!");
-        }
-        return this;
-    }
-
-    /**
-     * start with more than one threads
-     *
-     * @param executorService executorService to run the spider
-     * @param threadNum threadNum
-     * @return this
-     */
-    public Spider thread(ExecutorService executorService, int threadNum) {
-        checkIfRunning();
-        this.threadNum = threadNum;
-        if (threadNum <= 0) {
-            throw new IllegalArgumentException("threadNum should be more than one!");
-        }
-        this.executorService = executorService;
-        return this;
-    }
-
-    public boolean isExitWhenComplete() {
-        return exitWhenComplete;
-    }
-
-    /**
-     * Exit when complete. <br>
-     * True: exit when all url of the site is downloaded. <br>
-     * False: not exit until call stop() manually.<br>
-     *
-     * @param exitWhenComplete exitWhenComplete
-     * @return this
-     */
-    public Spider setExitWhenComplete(boolean exitWhenComplete) {
-        this.exitWhenComplete = exitWhenComplete;
-        return this;
-    }
-
-    public boolean isSpawnUrl() {
-        return spawnUrl;
-    }
-
-    /**
+     * 获取下载的总页数
      * Get page count downloaded by spider.
      *
      * @return total downloaded page count
@@ -649,6 +696,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 获取爬虫运行状态
      * Get running status by spider.
      *
      * @return running status
@@ -659,32 +707,8 @@ public class Spider implements Runnable, Task {
         return Status.fromValue(stat.get());
     }
 
-
-    public enum Status {
-        Init(0), Running(1), Stopped(2);
-
-        private Status(int value) {
-            this.value = value;
-        }
-
-        private int value;
-
-        int getValue() {
-            return value;
-        }
-
-        public static Status fromValue(int value) {
-            for (Status status : Status.values()) {
-                if (status.getValue() == value) {
-                    return status;
-                }
-            }
-            //default value
-            return Init;
-        }
-    }
-
     /**
+     * 获取正在运行的活动爬虫数量
      * Get thread count which is running
      *
      * @return thread count which is running
@@ -698,19 +722,9 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * Whether add urls extracted to download.<br>
-     * Add urls to download when it is true, and just download seed urls when it is false. <br>
-     * DO NOT set it unless you know what it means!
-     *
-     * @param spawnUrl spawnUrl
-     * @return this
-     * @since 0.4.0
+     * 获取爬虫uuid
+     * 若未设置爬虫uuid，则返回下载url的域名，若仍未空，则返回随机uuid
      */
-    public Spider setSpawnUrl(boolean spawnUrl) {
-        this.spawnUrl = spawnUrl;
-        return this;
-    }
-
     @Override
     public String getUUID() {
         if (uuid != null) {
@@ -726,6 +740,85 @@ public class Spider implements Runnable, Task {
     public Spider setExecutorService(ExecutorService executorService) {
         checkIfRunning();
         this.executorService = executorService;
+        return this;
+    }
+
+    /**
+     * 设置爬虫线程数量
+     * start with more than one threads
+     *
+     * @param threadNum threadNum
+     * @return this
+     */
+    public Spider thread(int threadNum) {
+        checkIfRunning();
+        this.threadNum = threadNum;
+        if (threadNum <= 0) {
+            throw new IllegalArgumentException("threadNum should be more than one!");
+        }
+        return this;
+    }
+
+    /**
+     * 设置爬虫线程数量和线程池
+     * start with more than one threads
+     *
+     * @param executorService executorService to run the spider
+     * @param threadNum       threadNum
+     * @return this
+     */
+    public Spider thread(ExecutorService executorService, int threadNum) {
+        checkIfRunning();
+        this.threadNum = threadNum;
+        if (threadNum <= 0) {
+            throw new IllegalArgumentException("threadNum should be more than one!");
+        }
+        this.executorService = executorService;
+        return this;
+    }
+
+    /**
+     * 爬虫完成时是否退出
+     */
+    public boolean isExitWhenComplete() {
+        return exitWhenComplete;
+    }
+
+    /**
+     * 设置是否完成时退出
+     * Exit when complete. <br>
+     * True: exit when all url of the site is downloaded. <br>
+     * False: not exit until call stop() manually.<br>
+     *
+     * @param exitWhenComplete exitWhenComplete
+     * @return this
+     */
+    public Spider setExitWhenComplete(boolean exitWhenComplete) {
+        this.exitWhenComplete = exitWhenComplete;
+        return this;
+    }
+
+    /**
+     * 判断是否是二次爬虫地址，而不是初始地址
+     */
+    public boolean isSpawnUrl() {
+        return spawnUrl;
+    }
+
+    /**
+     * 设置是否是二次爬虫地址
+     * 若是，则添加到下载队列
+     * 若不是，则下载完初始爬虫地址后就结束
+     * Whether add urls extracted to download.<br>
+     * Add urls to download when it is true, and just download seed urls when it is false. <br>
+     * DO NOT set it unless you know what it means!
+     *
+     * @param spawnUrl spawnUrl
+     * @return this
+     * @since 0.4.0
+     */
+    public Spider setSpawnUrl(boolean spawnUrl) {
+        this.spawnUrl = spawnUrl;
         return this;
     }
 
@@ -752,6 +845,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 设置没有url时的等待时间
      * Set wait time when no url is polled.<br><br>
      *
      * @param emptySleepTime In MILLISECONDS.
@@ -759,4 +853,32 @@ public class Spider implements Runnable, Task {
     public void setEmptySleepTime(int emptySleepTime) {
         this.emptySleepTime = emptySleepTime;
     }
+
+    /**
+     * 爬虫运行状态枚举类
+     */
+    public enum Status {
+        Init(0), Running(1), Stopped(2);
+
+        private Status(int value) {
+            this.value = value;
+        }
+
+        private int value;
+
+        int getValue() {
+            return value;
+        }
+
+        public static Status fromValue(int value) {
+            for (Status status : Status.values()) {
+                if (status.getValue() == value) {
+                    return status;
+                }
+            }
+            //default value
+            return Init;
+        }
+    }
+
 }

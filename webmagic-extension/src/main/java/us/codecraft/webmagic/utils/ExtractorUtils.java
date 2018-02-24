@@ -2,6 +2,8 @@ package us.codecraft.webmagic.utils;
 
 import us.codecraft.webmagic.model.annotation.ExtractBy;
 import us.codecraft.webmagic.selector.*;
+import us.codecraft.webmagic.selector.element.CssSelector;
+import us.codecraft.webmagic.selector.element.XpathSelector;
 
 import java.util.ArrayList;
 import java.util.List;

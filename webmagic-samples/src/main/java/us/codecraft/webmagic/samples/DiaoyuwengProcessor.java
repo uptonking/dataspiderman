@@ -4,7 +4,7 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.PlainText;
+import us.codecraft.webmagic.selector.selectable.PlainText;
 
 import java.util.List;
 

@@ -1,13 +1,22 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.selectable;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import us.codecraft.webmagic.selector.element.BaseElementSelector;
+import us.codecraft.webmagic.selector.element.CssSelector;
+import us.codecraft.webmagic.selector.element.LinksSelector;
+import us.codecraft.webmagic.selector.Selector;
+import us.codecraft.webmagic.selector.Selectors;
+import us.codecraft.webmagic.selector.SmartContentSelector;
+import us.codecraft.webmagic.selector.element.XpathSelector;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
 /**
+ * 可抽取的HTML节点
+ *
  * @author code4crafer@gmail.com
  */
 public class HtmlNode extends AbstractSelectable {
@@ -46,7 +55,7 @@ public class HtmlNode extends AbstractSelectable {
     @Override
     public Selectable selectList(Selector selector) {
         if (selector instanceof BaseElementSelector) {
-           return selectElements((BaseElementSelector) selector);
+            return selectElements((BaseElementSelector) selector);
         }
         return selectList(selector, getSourceTexts());
     }

@@ -4,15 +4,23 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 
 /**
+ * http请求上下文bean
+ *
  * @author code4crafter@gmail.com
- *         Date: 17/4/8
- *         Time: 19:43
+ * Date: 17/4/8
+ * Time: 19:43
  * @since 0.7.0
  */
 public class HttpClientRequestContext {
 
+    /**
+     * 通用请求接口实例
+     */
     private HttpUriRequest httpUriRequest;
 
+    /**
+     * http客户端上下文
+     */
     private HttpClientContext httpClientContext;
 
     public HttpUriRequest getHttpUriRequest() {

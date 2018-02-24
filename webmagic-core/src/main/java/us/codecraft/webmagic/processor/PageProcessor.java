@@ -4,6 +4,9 @@ import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 
 /**
+ * 页面解析处理接口
+ * 需要开发者根据爬虫需求实现
+ * <p>
  * Interface to be implemented to customize a crawler.<br>
  * <br>
  * In PageProcessor, you can customize:
@@ -24,7 +27,7 @@ public interface PageProcessor {
      *
      * @param page page
      */
-    public void process(Page page);
+    void process(Page page);
 
     /**
      * get the site settings
@@ -32,5 +35,5 @@ public interface PageProcessor {
      * @return site
      * @see Site
      */
-    public Site getSite();
+    Site getSite();
 }

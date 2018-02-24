@@ -1,4 +1,4 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.element;
 
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Element;
@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 针对html的超链接抽取器
+ * <p>
  * Links selector based on jsoup. Use absolute url. <br>
  *
  * @author code4crafter@gmail.com <br>

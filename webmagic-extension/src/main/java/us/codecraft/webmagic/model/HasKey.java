@@ -16,5 +16,5 @@ public interface HasKey {
      *
      * @return key
      */
-    public String key();
+      String key();
 }

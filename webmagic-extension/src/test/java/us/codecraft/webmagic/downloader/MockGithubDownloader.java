@@ -3,7 +3,7 @@ package us.codecraft.webmagic.downloader;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Task;
-import us.codecraft.webmagic.selector.PlainText;
+import us.codecraft.webmagic.selector.selectable.PlainText;
 
 /**
  * @author code4crafter@gmail.com

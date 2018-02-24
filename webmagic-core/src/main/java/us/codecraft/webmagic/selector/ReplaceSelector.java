@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
+ * 基于正则表达式的选择替换
+ * <p>
  * Replace selector.<br>
  *
  * @author code4crafter@gmail.com <br>

@@ -6,6 +6,7 @@ import us.codecraft.webmagic.Task;
 import java.util.Map;
 
 /**
+ * 解析结果直接打印到控制台的处理器 实现类
  * Write results in console.<br>
  * Usually used in test.
  *

@@ -3,6 +3,8 @@ package us.codecraft.webmagic.utils;
 import java.io.File;
 
 /**
+ * 文件持久化工具类
+ *
  * Base object of file persistence.
  *
  * @author code4crafter@gmail.com <br>
@@ -21,6 +23,11 @@ public class FilePersistentBase {
         }
     }
 
+    /**
+     * 设置保存文件的目录
+     *
+     * @param path 路径
+     */
     public void setPath(String path) {
         if (!path.endsWith(PATH_SEPERATOR)) {
             path += PATH_SEPERATOR;

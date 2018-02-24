@@ -1,27 +1,23 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.selectable;
 
 import org.apache.commons.collections.CollectionUtils;
+import us.codecraft.webmagic.selector.RegexSelector;
+import us.codecraft.webmagic.selector.ReplaceSelector;
+import us.codecraft.webmagic.selector.Selector;
+import us.codecraft.webmagic.selector.Selectors;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 可抽取文本文本的抽象类
+ *
  * @author code4crafer@gmail.com
  * @since 0.5.2
  */
 public abstract class AbstractSelectable implements Selectable {
 
     protected abstract List<String> getSourceTexts();
-
-    @Override
-    public Selectable css(String selector) {
-        return $(selector);
-    }
-
-    @Override
-    public Selectable css(String selector, String attrName) {
-        return $(selector, attrName);
-    }
 
     protected Selectable select(Selector selector, List<String> strings) {
         List<String> results = new ArrayList<String>();
@@ -42,6 +38,24 @@ public abstract class AbstractSelectable implements Selectable {
         }
         return new PlainText(results);
     }
+
+    public String getFirstSourceText() {
+        if (getSourceTexts() != null && getSourceTexts().size() > 0) {
+            return getSourceTexts().get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public Selectable css(String selector) {
+        return $(selector);
+    }
+
+    @Override
+    public Selectable css(String selector, String attrName) {
+        return $(selector, attrName);
+    }
+
 
     @Override
     public List<String> all() {
@@ -86,15 +100,8 @@ public abstract class AbstractSelectable implements Selectable {
 
     @Override
     public Selectable replace(String regex, String replacement) {
-        ReplaceSelector replaceSelector = new ReplaceSelector(regex,replacement);
+        ReplaceSelector replaceSelector = new ReplaceSelector(regex, replacement);
         return select(replaceSelector, getSourceTexts());
-    }
-
-    public String getFirstSourceText() {
-        if (getSourceTexts() != null && getSourceTexts().size() > 0) {
-            return getSourceTexts().get(0);
-        }
-        return null;
     }
 
     @Override

@@ -14,7 +14,7 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.proxy.Proxy;
 import us.codecraft.webmagic.proxy.ProxyProvider;
-import us.codecraft.webmagic.selector.PlainText;
+import us.codecraft.webmagic.selector.selectable.PlainText;
 import us.codecraft.webmagic.utils.CharsetUtils;
 import us.codecraft.webmagic.utils.HttpClientUtils;
 
@@ -25,7 +25,8 @@ import java.util.Map;
 
 
 /**
- * 基于apache CloseableHttpResponse封装的下载器
+ * 基于apache CloseableHttpClient 封装的下载器
+ * <p>
  * The http downloader based on HttpClient.
  *
  * @author code4crafter@gmail.com <br>
@@ -34,7 +35,7 @@ import java.util.Map;
 @ThreadSafe
 public class HttpClientDownloader extends AbstractDownloader {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(HttpClientDownloader.class);
 
     private final Map<String, CloseableHttpClient> httpClients = new HashMap<String, CloseableHttpClient>();
 
@@ -54,12 +55,22 @@ public class HttpClientDownloader extends AbstractDownloader {
         this.proxyProvider = proxyProvider;
     }
 
+    /**
+     * 根据域名获取 CloseableHttpClient
+     * 同一个域名共用一个client
+     *
+     * @param site 连接信息bean
+     * @return CloseableHttpClient
+     */
     private CloseableHttpClient getHttpClient(Site site) {
         if (site == null) {
             return httpClientGenerator.getClient(null);
         }
+
         String domain = site.getDomain();
         CloseableHttpClient httpClient = httpClients.get(domain);
+
+        ///双重检查创建单例 httpClient
         if (httpClient == null) {
             synchronized (this) {
                 httpClient = httpClients.get(domain);
@@ -72,8 +83,16 @@ public class HttpClientDownloader extends AbstractDownloader {
         return httpClient;
     }
 
+    /**
+     * 下载页面内容
+     *
+     * @param request request
+     * @param task    task
+     * @return 下载完成的页面，未解析
+     */
     @Override
     public Page download(Request request, Task task) {
+
         if (task == null || task.getSite() == null) {
             throw new NullPointerException("task or site can not be null");
         }
@@ -81,10 +100,15 @@ public class HttpClientDownloader extends AbstractDownloader {
         CloseableHttpClient httpClient = getHttpClient(task.getSite());
         Proxy proxy = proxyProvider != null ? proxyProvider.getProxy(task) : null;
         HttpClientRequestContext requestContext = httpUriRequestConverter.convert(request, task.getSite(), proxy);
+
+        //page默认是下载失败的信息
         Page page = Page.fail();
+
         try {
+            //获取http响应内容
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             page = handleResponse(request, request.getCharset() != null ? request.getCharset() : task.getSite().getCharset(), httpResponse, task);
+
             onSuccess(request);
             logger.info("downloading page success {}", request.getUrl());
             return page;
@@ -103,18 +127,18 @@ public class HttpClientDownloader extends AbstractDownloader {
         }
     }
 
-    @Override
-    public void setThread(int thread) {
-        httpClientGenerator.setPoolSize(thread);
-    }
-
+    /**
+     * 响应结果根据编码解析成RawText
+     */
     protected Page handleResponse(Request request, String charset, HttpResponse httpResponse, Task task) throws IOException {
+
         byte[] bytes = IOUtils.toByteArray(httpResponse.getEntity().getContent());
         String contentType = httpResponse.getEntity().getContentType() == null ? "" : httpResponse.getEntity().getContentType().getValue();
         Page page = new Page();
         page.setBytes(bytes);
-        if (!request.isBinaryContent()){
+        if (!request.isBinaryContent()) {
             if (charset == null) {
+                //自动获取请求页面内容的字符集
                 charset = getHtmlCharset(contentType, bytes);
             }
             page.setCharset(charset);
@@ -130,12 +154,28 @@ public class HttpClientDownloader extends AbstractDownloader {
         return page;
     }
 
+    /**
+     * 自动获取请求页面内容的字符集
+     */
     private String getHtmlCharset(String contentType, byte[] contentBytes) throws IOException {
+
         String charset = CharsetUtils.detectCharset(contentType, contentBytes);
+
         if (charset == null) {
             charset = Charset.defaultCharset().name();
             logger.warn("Charset autodetect failed, use {} as charset. Please specify charset in Site.setCharset()", Charset.defaultCharset());
         }
         return charset;
     }
+
+    /**
+     * 设置下载最大并发数量
+     *
+     * @param thread 同时下载的数量
+     */
+    @Override
+    public void setThread(int thread) {
+        httpClientGenerator.setPoolSize(thread);
+    }
+
 }

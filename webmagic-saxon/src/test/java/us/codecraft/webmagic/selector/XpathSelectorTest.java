@@ -8,6 +8,9 @@ import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import us.codecraft.webmagic.selector.element.CssSelector;
+import us.codecraft.webmagic.selector.element.XpathSelector;
+import us.codecraft.webmagic.selector.selectable.Html;
 import us.codecraft.xsoup.XPathEvaluator;
 import us.codecraft.xsoup.Xsoup;
 

@@ -1,16 +1,26 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.selectable;
 
 import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import us.codecraft.webmagic.selector.JsonPathSelector;
+
 import us.codecraft.xsoup.XTokenQueue;
 
 import java.util.List;
 
 /**
+ * 抽取JSON
+ * 基于Xsoup，Xsoup是一个XPath selector based on Jsoup
+ * <p>
  * parse json
+ *
  * @author code4crafter@gmail.com
  * @since 0.5.0
  */
 public class Json extends PlainText {
+
+    private static Logger logger = LoggerFactory.getLogger(Json.class);
 
     public Json(List<String> strings) {
         super(strings);
@@ -22,6 +32,7 @@ public class Json extends PlainText {
 
     /**
      * remove padding for JSONP
+     *
      * @param padding padding
      * @return json after padding removed
      */
@@ -52,6 +63,6 @@ public class Json extends PlainText {
     @Override
     public Selectable jsonPath(String jsonPath) {
         JsonPathSelector jsonPathSelector = new JsonPathSelector(jsonPath);
-        return selectList(jsonPathSelector,getSourceTexts());
+        return selectList(jsonPathSelector, getSourceTexts());
     }
 }

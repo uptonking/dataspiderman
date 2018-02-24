@@ -6,7 +6,7 @@ import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.model.annotation.ExtractBy;
 import us.codecraft.webmagic.model.annotation.HelpUrl;
 import us.codecraft.webmagic.model.annotation.TargetUrl;
-import us.codecraft.webmagic.selector.PlainText;
+import us.codecraft.webmagic.selector.selectable.PlainText;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

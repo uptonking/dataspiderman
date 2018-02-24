@@ -1,6 +1,8 @@
 package us.codecraft.webmagic.selector;
 
 import org.junit.Test;
+import us.codecraft.webmagic.selector.selectable.Html;
+import us.codecraft.webmagic.selector.selectable.Selectable;
 
 import java.util.List;
 

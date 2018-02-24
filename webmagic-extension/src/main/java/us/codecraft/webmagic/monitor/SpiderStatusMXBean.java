@@ -9,27 +9,27 @@ import java.util.List;
  */
 public interface SpiderStatusMXBean {
 
-    public String getName();
+     String getName();
 
-    public String getStatus();
+     String getStatus();
 
-    public int getThread();
+     int getThread();
 
-    public int getTotalPageCount();
+     int getTotalPageCount();
 
-    public int getLeftPageCount();
+     int getLeftPageCount();
 
-    public int getSuccessPageCount();
+     int getSuccessPageCount();
 
-    public int getErrorPageCount();
+     int getErrorPageCount();
 
-    public List<String> getErrorPages();
+     List<String> getErrorPages();
 
-    public void start();
+     void start();
 
-    public void stop();
+     void stop();
 
-    public Date getStartTime();
+     Date getStartTime();
 
-    public int getPagePerSecond();
+     int getPagePerSecond();
 }

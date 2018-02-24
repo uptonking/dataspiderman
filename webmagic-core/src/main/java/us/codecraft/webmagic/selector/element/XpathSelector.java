@@ -1,4 +1,4 @@
-package us.codecraft.webmagic.selector;
+package us.codecraft.webmagic.selector.element;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.jsoup.nodes.Element;
@@ -8,7 +8,9 @@ import us.codecraft.xsoup.Xsoup;
 import java.util.List;
 
 /**
- * XPath selector based on Xsoup.<br>
+ * 对html可用的XpathSelector
+ * <p>
+ * XPath selector based on Xsoup.
  *
  * @author code4crafter@gmail.com <br>
  * @since 0.3.0
@@ -34,7 +36,7 @@ public class XpathSelector extends BaseElementSelector {
     @Override
     public Element selectElement(Element element) {
         List<Element> elements = selectElements(element);
-        if (CollectionUtils.isNotEmpty(elements)){
+        if (CollectionUtils.isNotEmpty(elements)) {
             return elements.get(0);
         }
         return null;

@@ -6,6 +6,9 @@ import us.codecraft.webmagic.Site;
 import java.util.List;
 
 /**
+ * 简单页面解析器
+ * 作为PageProcessor的开发示例
+ * <p>
  * A simple PageProcessor.
  *
  * @author code4crafter@gmail.com <br>
@@ -24,6 +27,9 @@ public class SimplePageProcessor implements PageProcessor {
 
     }
 
+    /**
+     * 默认解析结果有3个字段
+     */
     @Override
     public void process(Page page) {
         List<String> requests = page.getHtml().links().regex(urlPattern).all();

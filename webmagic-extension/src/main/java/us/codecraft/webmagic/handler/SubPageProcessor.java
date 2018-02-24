@@ -14,6 +14,6 @@ public interface SubPageProcessor extends RequestMatcher {
 	 *
 	 * @return whether continue to match
 	 */
-	public MatchOther processPage(Page page);
+	 MatchOther processPage(Page page);
 
 }

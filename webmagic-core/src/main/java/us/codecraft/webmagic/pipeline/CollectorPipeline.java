@@ -3,6 +3,7 @@ package us.codecraft.webmagic.pipeline;
 import java.util.List;
 
 /**
+ * 收集结果的Pipeline接口
  * Pipeline that can collect and store results. <br>
  * Used for {@link us.codecraft.webmagic.Spider#getAll(java.util.Collection)}
  *
@@ -16,5 +17,5 @@ public interface CollectorPipeline<T> extends Pipeline {
      *
      * @return collected results
      */
-    public List<T> getCollected();
+    List<T> getCollected();
 }
