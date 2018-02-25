@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * spider状态bean的接口
+ * 可以通过继承SpiderStatusMXBean来实现扩展自定义监控信息
  *
  * @author code4crafer@gmail.com
  * @since 0.5.0

@@ -11,6 +11,7 @@ import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 
 /**
  * 请求url缓存到redis
+ * 使用Redis保存抓取队列，可进行多台机器同时合作抓取
  * <p>
  * Use Redis as url scheduler for distributed crawlers.<br>
  *

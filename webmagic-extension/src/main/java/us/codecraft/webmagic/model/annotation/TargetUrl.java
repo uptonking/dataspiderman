@@ -28,6 +28,7 @@ public @interface TargetUrl {
     String[] value();
 
     /**
+     * 这个参数是一个XPath表达式，指定了这个URL从哪里得到，不在sourceRegion的URL不会被抽取。
      * Define the region for url extracting. <br>
      * Only support XPath.<br>
      * When sourceRegion is set, the urls will be extracted only from the region instead of entire content. <br>

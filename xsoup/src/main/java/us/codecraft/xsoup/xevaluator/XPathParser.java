@@ -6,11 +6,17 @@ import org.jsoup.select.Selector;
 import us.codecraft.xsoup.XPathEvaluator;
 import us.codecraft.xsoup.XTokenQueue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 基于jsoup实现的xpath解析器
+ * <p>
  * Parser of XPath.
  *
  * @author code4crafter@gmail.com
@@ -26,6 +32,7 @@ public class XPathParser {
     private static final String[] HIERARCHY_COMBINATORS = new String[]{"//", "/", "|"};
 
     private static final Map<String, FunctionEvaluator> FUNCTION_MAPPING = new HashMap<String, FunctionEvaluator>();
+
     static {
         FUNCTION_MAPPING.put("contains", new FunctionEvaluator() {
             @Override

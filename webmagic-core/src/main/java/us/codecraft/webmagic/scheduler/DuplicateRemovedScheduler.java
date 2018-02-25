@@ -9,7 +9,7 @@ import us.codecraft.webmagic.scheduler.component.HashSetDuplicateRemover;
 import us.codecraft.webmagic.utils.HttpConstant;
 
 /**
- * 默认去重的请求url管理器 抽象类
+ * 请求url去重的抽象类
  * <p>
  * Remove duplicate urls and only push urls which are not duplicate.<br><br>
  *
@@ -56,7 +56,6 @@ public abstract class DuplicateRemovedScheduler implements Scheduler {
     }
 
     /**
-     *
      * @param request
      * @param task
      */

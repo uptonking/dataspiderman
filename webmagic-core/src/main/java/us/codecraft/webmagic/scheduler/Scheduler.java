@@ -4,7 +4,10 @@ import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Task;
 
 /**
- * url地址管理接口
+ * Scheduler是WebMagic中进行URL管理的组件
+ * <p>
+ * 对待抓取的URL队列进行管理
+ * 对已抓取的URL进行去重
  * <p>
  * Scheduler is the part of url management.<br>
  * You can implement interface Scheduler to do:

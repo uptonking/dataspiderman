@@ -5,11 +5,17 @@ import org.jsoup.select.Elements;
 import org.jsoup.select.Evaluator;
 
 /**
+ * 元素匹配工具类 抽象类
+ * <p>
  * Evaluators in Xsoup.
+ *
  * @author code4crafter@gmail.com
  */
 public abstract class XEvaluators {
 
+    /**
+     * 属性数量检测 工具类
+     */
     public static class HasAnyAttribute extends Evaluator {
 
         @Override
@@ -18,9 +24,13 @@ public abstract class XEvaluators {
         }
     }
 
+    /**
+     * 计算列表项元素在列表中的索引位置 工具类
+     */
     public static class IsNthOfType extends Evaluator.CssNthEvaluator {
+
         public IsNthOfType(int a, int b) {
-            super(a,b);
+            super(a, b);
         }
 
         protected int calculatePosition(Element root, Element element) {

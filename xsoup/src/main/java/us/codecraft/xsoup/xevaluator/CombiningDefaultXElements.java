@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 默认复合执行器
+ *
  * @author code4crafter@gmail.com
  */
 public class CombiningDefaultXElements implements XElements {

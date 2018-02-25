@@ -12,6 +12,8 @@ import java.util.Map;
 
 /**
  * http请求body对象bean
+ * 从0.7.1版本开始，POST默认不会去重，详情见：Issue 484。
+ * 如果想要去重可以自己继承DuplicateRemovedScheduler，重写push方法。
  *
  * @author code4crafter@gmail.com
  * Date: 17/4/8

@@ -5,6 +5,7 @@ import us.codecraft.webmagic.Task;
 
 /**
  * 代理提供者
+ * ProxyProvider定位更多是一个“组件”，是由HttpClientDownloader设置
  * <p>
  * Proxy provider
  *

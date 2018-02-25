@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
+ * 字符解析工具类
+ * <p>
  * A character queue with parsing helpers.
  * <br>
  * Most code borrowed from {@link org.jsoup.parser.TokenQueue}
@@ -16,16 +18,19 @@ import java.util.regex.Pattern;
  * @see org.jsoup.parser.TokenQueue
  */
 public class XTokenQueue {
-    private String queue;
-    private int pos = 0;
 
-    private static final char ESC = '\\'; // escape char for chomp balanced.
+    // escape char for chomp balanced.
+    private static final char ESC = '\\';
 
     private static final String[] quotes = {"\"", "'"};
 
     private static final char singleQuote = '\'';
 
     private static final char doubleQuote = '"';
+
+    private String queue;
+
+    private int pos = 0;
 
     /**
      * Create a new TokenQueue.
@@ -391,6 +396,7 @@ public class XTokenQueue {
 
     /**
      * Pulls the next run of whitespace characters of the queue.
+     *
      * @return seen
      */
     public boolean consumeWhitespace() {

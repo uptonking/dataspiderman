@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 基本格式化功能的抽象类
+ * 基本类型转换的抽象类
  * <p>
  * 包含Java 8种基本数据类型的格式化静态内部类
  *

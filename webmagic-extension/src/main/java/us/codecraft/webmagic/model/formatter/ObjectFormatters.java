@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 格式化类集合 工具类
+ * 类型转换 工具类
  *
  * @author code4crafter@gmail.com
  * @since 0.3.2

@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 复合xpath执行器
+ *
  * @author code4crafter@gmail.com
  */
 public class CombingXPathEvaluator implements XPathEvaluator {
@@ -35,7 +37,7 @@ public class CombingXPathEvaluator implements XPathEvaluator {
     @Override
     public boolean hasAttribute() {
         for (XPathEvaluator xPathEvaluator : xPathEvaluators) {
-            if (xPathEvaluator.hasAttribute()){
+            if (xPathEvaluator.hasAttribute()) {
                 return true;
             }
         }

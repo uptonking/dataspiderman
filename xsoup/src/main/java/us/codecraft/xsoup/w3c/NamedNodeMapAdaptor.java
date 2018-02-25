@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * NamedNodeMap适配器 类
+ *
  * @author code4crafer@gmail.com
  */
 public class NamedNodeMapAdaptor implements NamedNodeMap {
@@ -19,7 +21,7 @@ public class NamedNodeMapAdaptor implements NamedNodeMap {
         this.nodeList = nodeList;
         nodeMap = new HashMap<String, Node>(nodeList.size());
         for (Node node : nodeList) {
-            nodeMap.put(node.getNodeName(),node);
+            nodeMap.put(node.getNodeName(), node);
         }
     }
 

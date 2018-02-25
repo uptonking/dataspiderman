@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 收集page model到ArrayList
+ * 保存page model到ArrayList
  *
  * @author code4crafter@gmail.com
  */

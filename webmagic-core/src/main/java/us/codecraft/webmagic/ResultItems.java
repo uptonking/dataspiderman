@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * 页面解析后的结果对象bean
+ * 核心是解析页面得到的Map fields
  * <p>
  * Object contains extract results.<br>
  * It is contained in Page and will be processed in pipeline.

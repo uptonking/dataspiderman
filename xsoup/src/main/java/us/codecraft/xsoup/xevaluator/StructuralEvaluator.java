@@ -4,12 +4,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Evaluator;
 
 /**
+ * 结构化元素匹配器
+ * <p>
  * Base structural evaluator.
  * Copy from {@link org.jsoup.select.StructuralEvaluator} because it is package visible
  *
  * @see org.jsoup.select.StructuralEvaluator
  */
 abstract class StructuralEvaluator extends Evaluator {
+
     Evaluator evaluator;
 
     static class Root extends Evaluator {

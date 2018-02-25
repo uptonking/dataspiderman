@@ -11,5 +11,10 @@ import us.codecraft.webmagic.Page;
  */
 public interface AfterExtractor {
 
+    /**
+     * 会在抽取结束，字段都初始化完毕之后被调用，可以处理一些特殊的逻辑
+     *
+     * @param page 下载完成的page
+     */
     void afterProcess(Page page);
 }

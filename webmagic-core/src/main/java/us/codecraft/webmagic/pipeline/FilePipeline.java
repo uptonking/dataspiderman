@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * 解析结果存储到文本文件的处理器 实现类
- *
+ * <p>
  * Store results in files.<br>
  *
  * @author code4crafter@gmail.com <br>
@@ -26,7 +26,7 @@ import java.util.Map;
 @ThreadSafe
 public class FilePipeline extends FilePersistentBase implements Pipeline {
 
-    private static  Logger logger = LoggerFactory.getLogger(FilePipeline.class);
+    private static Logger logger = LoggerFactory.getLogger(FilePipeline.class);
 
     /**
      * create a FilePipeline with default path"/data/webmagic/"

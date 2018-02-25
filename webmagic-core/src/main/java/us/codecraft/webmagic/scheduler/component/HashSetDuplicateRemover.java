@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 使用HashSet来进行去重，占用内存较大，所有去重默认使用HashSetDuplicateRemover
  * <p>
- * 使用BloomFilter来进行去重，占用内存较小，但是可能漏抓页面，如果使用BloomFilterDuplicateRemover，需要单独引入Guava依赖包
+ * 使用BloomFilter来进行去重，占用内存较小，但是可能漏抓页面，如果要用，需要单独引入Guava依赖包
  *
  * @author code4crafer@gmail.com
  */

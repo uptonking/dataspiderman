@@ -1,7 +1,8 @@
 package us.codecraft.webmagic.model.formatter;
 
 /**
- * 格式化方法 接口
+ * 类型转换 接口
+ * 除了自动类型转换之外，Formatter还可以通过自定义来做一些结果的后处理的事情
  *
  * @author code4crafter@gmail.com
  */

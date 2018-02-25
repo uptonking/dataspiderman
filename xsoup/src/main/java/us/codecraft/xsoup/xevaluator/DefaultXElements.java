@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 默认多个元素
+ * <p>
  * XPath results.
  *
  * @author code4crafter@gmail.com

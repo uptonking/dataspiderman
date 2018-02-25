@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 对url的封装对象bean，request对应url是1对1
+ * 对请求url地址封装的对象bean，request对应url是1对1的关系
  * 是PageProcessor与Downloader交互的载体，也是PageProcessor控制Downloader唯一方式
  * <p>
  * Object contains url to crawl.<br>

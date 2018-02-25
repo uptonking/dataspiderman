@@ -10,13 +10,16 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * 复合执行器工具类 抽象类
+ * <p>
  * Base combining (and, or) evaluator.
- *
+ * <p>
  * Copy from {@link org.jsoup.select.CombiningEvaluator} because it is package visible
  *
  * @see org.jsoup.select.CombiningEvaluator
  */
 abstract class CombiningEvaluator extends Evaluator {
+
     final List<Evaluator> evaluators;
 
     CombiningEvaluator() {
@@ -32,11 +35,14 @@ abstract class CombiningEvaluator extends Evaluator {
     Evaluator rightMostEvaluator() {
         return evaluators.size() > 0 ? evaluators.get(evaluators.size() - 1) : null;
     }
-    
+
     void replaceRightMostEvaluator(Evaluator replacement) {
         evaluators.set(evaluators.size() - 1, replacement);
     }
 
+    /**
+     * 多个执行器求交
+     */
     static final class And extends CombiningEvaluator {
         And(Collection<Evaluator> evaluators) {
             super(evaluators);
@@ -62,6 +68,9 @@ abstract class CombiningEvaluator extends Evaluator {
         }
     }
 
+    /**
+     * 多个执行器求并
+     */
     static final class Or extends CombiningEvaluator {
 
         Or(Collection<Evaluator> evaluators) {
@@ -83,6 +92,7 @@ abstract class CombiningEvaluator extends Evaluator {
 
         @Override
         public boolean matches(Element root, Element node) {
+
             for (int i = 0; i < evaluators.size(); i++) {
                 Evaluator s = evaluators.get(i);
                 if (s.matches(root, node))

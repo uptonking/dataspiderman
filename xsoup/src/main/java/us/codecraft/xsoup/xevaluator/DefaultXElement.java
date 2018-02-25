@@ -4,6 +4,8 @@ import org.jsoup.nodes.Element;
 import us.codecraft.xsoup.XElement;
 
 /**
+ * 默认单个元素
+ * <p>
  * XPath result.
  *
  * @author code4crafter@gmail.com
@@ -20,11 +22,11 @@ public class DefaultXElement implements XElement {
     }
 
     @Override
-    public String get(){
+    public String get() {
         return get(elementOperator);
     }
 
-    protected String get(ElementOperator elementOperator){
+    protected String get(ElementOperator elementOperator) {
         if (elementOperator == null) {
             return element.toString();
         } else {
@@ -33,7 +35,7 @@ public class DefaultXElement implements XElement {
     }
 
     public String toString() {
-         return get();
+        return get();
     }
 
     @Override

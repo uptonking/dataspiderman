@@ -10,14 +10,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 元素属性操作工具类 抽象类
+ * 仅有1个operate()方法
+ * <p>
+ * 内部包含元素操作的多个静态内部类
+ * 自定义了对爬虫非常方便的XPath函数，不在标准XPath语言规范中
+ * <p>
  * Operate on element to get XPath result.
  *
  * @author code4crafter@gmail.com
  */
 public abstract class ElementOperator {
 
+    /**
+     * 对元素进行操作
+     *
+     * @param element 输入的元素jsoup Element
+     * @return 文本
+     */
     public abstract String operate(Element element);
 
+    /**
+     * 获取元素的属性名
+     */
     public static class AttributeGetter extends ElementOperator {
 
         private String attribute;
@@ -37,6 +52,9 @@ public abstract class ElementOperator {
         }
     }
 
+    /**
+     * 获取元素的text
+     */
     public static class AllText extends ElementOperator {
 
         @Override
@@ -50,6 +68,9 @@ public abstract class ElementOperator {
         }
     }
 
+    /**
+     * 获取元素的html
+     */
     public static class Html extends ElementOperator {
 
         @Override
@@ -63,6 +84,9 @@ public abstract class ElementOperator {
         }
     }
 
+    /**
+     * 获取包含外层元素标签的html
+     */
     public static class OuterHtml extends ElementOperator {
 
         @Override
@@ -76,6 +100,9 @@ public abstract class ElementOperator {
         }
     }
 
+    /**
+     * 获取元素的纯文本
+     */
     public static class TidyText extends ElementOperator {
 
         @Override
@@ -89,6 +116,9 @@ public abstract class ElementOperator {
         }
     }
 
+    /**
+     * 获取元素及子元素的文本
+     */
     public static class GroupedText extends ElementOperator {
 
         private int group;
@@ -101,6 +131,7 @@ public abstract class ElementOperator {
         public String operate(Element element) {
             int index = 0;
             StringBuilder accum = new StringBuilder();
+
             for (Node node : element.childNodes()) {
                 if (node instanceof TextNode) {
                     TextNode textNode = (TextNode) node;
@@ -121,6 +152,7 @@ public abstract class ElementOperator {
     }
 
     /**
+     * 对元素进行正则匹配的工具类
      * usage:
      * <br>
      * regex('.*')

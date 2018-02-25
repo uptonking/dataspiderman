@@ -72,21 +72,24 @@ public class Spider implements Runnable, Task {
     private final static int STAT_RUNNING = 1;
     private final static int STAT_STOPPED = 2;
 
+    private Scheduler scheduler = new QueueScheduler();
+
     private Downloader downloader;
 
     private PageProcessor pageProcessor;
 
     private List<Pipeline> pipelines = new ArrayList<Pipeline>();
 
-    private Scheduler scheduler = new QueueScheduler();
     /**
      * 爬虫初始url地址
      */
     private List<Request> startRequests;
-
+    /**
+     * 爬取站点的通用http连接信息bean
+     */
     private Site site;
     /**
-     * 任务id
+     * 爬虫任务id
      */
     private String uuid;
     /**
@@ -95,7 +98,9 @@ public class Spider implements Runnable, Task {
     private CountableThreadPool threadPool;
 
     private ExecutorService executorService;
-
+    /**
+     * 爬虫并发线程数，默认单线程
+     */
     private int threadNum = 1;
     /**
      * 爬虫运行状态
@@ -104,7 +109,9 @@ public class Spider implements Runnable, Task {
 
     private boolean exitWhenComplete = true;
     private boolean destroyWhenExit = true;
-
+    /**
+     * 是否是派生的二次爬虫地址
+     */
     private boolean spawnUrl = true;
 
     private ReentrantLock newUrlLock = new ReentrantLock();
@@ -113,13 +120,15 @@ public class Spider implements Runnable, Task {
     private List<SpiderListener> spiderListeners;
 
     private final AtomicLong pageCount = new AtomicLong(0);
-
+    /**
+     * 爬虫启动时间
+     */
     private Date startTime;
 
     private int emptySleepTime = 30000;
 
     /**
-     * 传入PageProcessor创建并初始化Spider
+     * 传入PageProcessor，创建并初始化Spider
      * create a spider with pageProcessor.
      *
      * @param pageProcessor pageProcessor
@@ -195,7 +204,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 设置scheduler
+     * 设置Scheduler，一个Spider只能有个一个Scheduler
      * set scheduler for Spider
      *
      * @param scheduler scheduler
@@ -229,7 +238,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 添加pipeline
+     * 添加一个Pipeline，一个Spider可以有多个Pipeline
      * add a pipeline for Spider
      *
      * @param pipeline pipeline
@@ -282,7 +291,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 设置Downloader
+     * 设置Downloader，一个Spider只能有个一个Downloader
      * set the downloader of spider
      *
      * @param downloader downloader
@@ -378,6 +387,20 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 在新线程中启动本爬虫
+     */
+    public void runAsync() {
+        Thread thread = new Thread(this);
+        thread.setDaemon(false);
+        thread.start();
+    }
+
+    public void start() {
+        runAsync();
+    }
+
+
+    /**
      * 触发爬虫失败的监听器事件
      */
     private void onError(Request request) {
@@ -442,7 +465,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 测试url的有效性
+     * 抓取一个页面进行测试
      * Process specific urls without url discovering.
      *
      * @param urls urls to process
@@ -537,6 +560,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 添加初始的Request
      * 添加单个请求url
      */
     private void addRequest(Request request) {
@@ -573,17 +597,9 @@ public class Spider implements Runnable, Task {
         }
     }
 
-    /**
-     * 在新线程中启动本爬虫
-     */
-    public void runAsync() {
-        Thread thread = new Thread(this);
-        thread.setDaemon(false);
-        thread.start();
-    }
 
     /**
-     * 添加爬虫url
+     * 添加初始的URL
      * Add urls to crawl. <br>
      *
      * @param urls urls
@@ -598,6 +614,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 同步调用，并直接取得所有结果
      * 同步下载所有url，返回所有解析结果
      * Download urls synchronizing.
      *
@@ -627,6 +644,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
+     * 同步调用，并直接取得结果
      * 返回第1个解析结果
      */
     public <T> T get(String url) {
@@ -667,10 +685,6 @@ public class Spider implements Runnable, Task {
         } finally {
             newUrlLock.unlock();
         }
-    }
-
-    public void start() {
-        runAsync();
     }
 
     /**

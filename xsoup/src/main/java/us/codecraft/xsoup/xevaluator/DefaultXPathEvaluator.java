@@ -9,6 +9,8 @@ import us.codecraft.xsoup.XElements;
 import us.codecraft.xsoup.XPathEvaluator;
 
 /**
+ * 默认匹配多个元素的执行器
+ *
  * @author code4crafter@gmail.com
  */
 public class DefaultXPathEvaluator implements XPathEvaluator {

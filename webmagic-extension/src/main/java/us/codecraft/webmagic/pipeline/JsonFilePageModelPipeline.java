@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * 将page model存到json文件的pipeline
+ * 注解模式 JSON格式保存结果到文件
  * <p>
  * Store results objects (page models) to files in JSON format.<br>
  * Use model.getKey() as file name if the model implements HasKey.<br>

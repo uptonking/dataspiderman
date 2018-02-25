@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * 用于管理请求url地址的优先队列
+ * 用于保存请求url地址的优先队列
  * <p>
  * Priority scheduler.
  * Request with higher priority will poll earlier. <br>

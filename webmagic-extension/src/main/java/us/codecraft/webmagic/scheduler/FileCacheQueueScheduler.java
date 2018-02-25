@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 请求url缓存到文件
+ * 使用文件保存抓取URL，可以在关闭程序并下次启动时，从之前抓取到的URL继续抓取
  * <p>
  * Store urls and cursor in files so that a Spider can resume the status when shutdown.<br>
  *

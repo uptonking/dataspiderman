@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * 提取结果格式化 注解
+ * 提取结果类型转换 注解
  * <p>
  * Define how the result string is convert to an object for field.
  *

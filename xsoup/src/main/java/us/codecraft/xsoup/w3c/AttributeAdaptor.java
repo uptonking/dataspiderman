@@ -1,16 +1,25 @@
 package us.codecraft.xsoup.w3c;
 
-import org.jsoup.nodes.*;
-import org.w3c.dom.*;
+import org.jsoup.nodes.Attribute;
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
 
 /**
+ * 单个属性kv适配器 类
+ *
  * @author code4crafer@gmail.com
  */
 public class AttributeAdaptor extends NodeAdaptor implements Attr {
 
+    /**
+     * A single key + value attribute. Keys are trimmed and normalised to lower-case
+     */
     private Attribute attribute;
 
     private org.jsoup.nodes.Element element;

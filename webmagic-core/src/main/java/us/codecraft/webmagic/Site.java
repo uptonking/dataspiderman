@@ -5,7 +5,7 @@ import us.codecraft.webmagic.utils.HttpConstant;
 import java.util.*;
 
 /**
- * 网站爬虫时，http协议相关设置bean
+ * 爬虫站点的http协议相关配置信息bean
  * <p>
  * Object contains setting for crawler.<br>
  *
@@ -26,7 +26,9 @@ public class Site {
     private Map<String, Map<String, String>> cookies = new HashMap<String, Map<String, String>>();
 
     private String charset;
-
+    /**
+     * 设置超时时间，单位是毫秒
+     */
     private int timeOut = 5000;
 
     private static final Set<Integer> DEFAULT_STATUS_CODE_SET = new HashSet<Integer>();
@@ -41,10 +43,13 @@ public class Site {
     private boolean disableCookieManagement = false;
 
     private int sleepTime = 5000;
-
+    /**
+     * 设置重试次数
+     */
     private int retryTimes = 0;
     /**
-     * 下载失败时的重试次数，默认不重试
+     * 设置循环重试次数，循环重试cycleRetry是0.3.0版本加入的机制，
+     * 该机制会将下载失败的url重新放入队列尾部重试，直到达到重试次数，以保证不因为某些网络原因漏抓页面
      */
     private int cycleRetryTimes = 0;
 
@@ -58,6 +63,10 @@ public class Site {
      * @return new site
      */
     public static Site me() {
+        return new Site();
+    }
+
+    public static Site create() {
         return new Site();
     }
 
@@ -141,6 +150,7 @@ public class Site {
     }
 
     /**
+     * 设置域名，需设置域名后，addCookie才可生效
      * set the domain of site.
      *
      * @param domain domain

@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * 解析结果直接打印到控制台的处理器 实现类
+ * <p>
  * Write results in console.<br>
  * Usually used in test.
  *
@@ -17,7 +18,9 @@ public class ConsolePipeline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
+
         System.out.println("get page: " + resultItems.getRequest().getUrl());
+
         for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
             System.out.println(entry.getKey() + ":\t" + entry.getValue());
         }

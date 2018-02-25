@@ -1,8 +1,12 @@
 package us.codecraft.xsoup.w3c;
 
-import org.w3c.dom.*;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Node;
+import org.w3c.dom.UserDataHandler;
 
 /**
+ * 单个Node适配器 抽象类
+ *
  * @author code4crafer@gmail.com
  */
 public abstract class NodeAdaptor implements Node {

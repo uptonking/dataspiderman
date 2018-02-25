@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 /**
- * 基于反射生成格式化对象的类
+ * 基于反射生成转换对象的类
  *
  * @author code4crafter@gmail.com
  * @since 0.7.0

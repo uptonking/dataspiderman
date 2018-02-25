@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * 直接基于正则表达式提取url的提取器 注解
+ * 从URL中进行抽取，它只支持正则表达式作为抽取规则
  * <p>
  * Define a extractor to extract data in url of current page. Only regex can be used. <br>
  *

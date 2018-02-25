@@ -6,6 +6,8 @@ import org.w3c.dom.NodeList;
 import java.util.List;
 
 /**
+ * NodeList适配器 类
+ *
  * @author code4crafer@gmail.com
  */
 public class NodeListAdaptor implements NodeList {
