@@ -1,8 +1,36 @@
 package us.codecraft.webmagic.utils;
 
+import java.util.HashMap;
 import java.util.Map;
 
+abstract class MultiKeyMapBase {
+
+    static final Class<? extends Map> DEFAULT_CLAZZ = HashMap.class;
+    @SuppressWarnings("rawtypes")
+    private Class<? extends Map> protoMapClass = DEFAULT_CLAZZ;
+
+    MultiKeyMapBase() {
+    }
+
+    @SuppressWarnings("rawtypes")
+    MultiKeyMapBase(Class<? extends Map> protoMapClass) {
+        this.protoMapClass = protoMapClass;
+    }
+
+    @SuppressWarnings("unchecked")
+    <K, V2> Map<K, V2> newMap() {
+        try {
+            return (Map<K, V2>) protoMapClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("wrong proto type map " + protoMapClass);
+        }
+    }
+}
+
 /**
+ * 3元组
+ * 前2个为key
+ *
  * @author code4crafter@gmail.com
  */
 public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
@@ -13,7 +41,7 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
     }
 
     public DoubleKeyMap(Map<K1, Map<K2, V>> map) {
-        this(map,DEFAULT_CLAZZ);
+        this(map, DEFAULT_CLAZZ);
     }
 
     public DoubleKeyMap(Class<? extends Map> protoMapClass) {
@@ -30,7 +58,7 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
     /**
      * init map with protoMapClass
      *
-     * @param map the origin map to contains the DoubleKeyMap
+     * @param map           the origin map to contains the DoubleKeyMap
      * @param protoMapClass protoMapClass
      */
     @SuppressWarnings("rawtypes")
@@ -62,7 +90,7 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
 
 
     /**
-     * @param key1 key1
+     * @param key1   key1
      * @param submap submap
      * @return value
      */
@@ -71,8 +99,8 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
     }
 
     /**
-     * @param key1 key1
-     * @param key2 key2
+     * @param key1  key1
+     * @param key2  key2
      * @param value value
      * @return value
      */

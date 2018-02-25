@@ -9,14 +9,16 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 爬虫状态bean 实现类
+ *
  * @author code4crafer@gmail.com
  * @since 0.5.0
  */
 public class SpiderStatus implements SpiderStatusMXBean {
 
-    protected final Spider spider;
+    protected static Logger logger = LoggerFactory.getLogger(SpiderStatus.class);
 
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Spider spider;
 
     protected final SpiderMonitor.MonitorSpiderListener monitorSpiderListener;
 

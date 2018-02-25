@@ -7,6 +7,8 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 /**
+ * ip地址工具类
+ *
  * @author code4crafer@gmail.com
  * @since 0.5.0
  */

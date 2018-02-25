@@ -5,6 +5,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.util.Date;
 
 /**
+ * 针对日期格式化的类
+ *
  * @author code4crafter@gmail.com
  * @since 0.3.2
  */

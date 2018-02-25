@@ -6,9 +6,11 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 /**
+ * 基于反射生成格式化对象的类
+ *
  * @author code4crafter@gmail.com
  * @since 0.7.0
- *         Date: 2017/6/3
+ * Date: 2017/6/3
  */
 public class ObjectFormatterBuilder {
 
@@ -20,7 +22,7 @@ public class ObjectFormatterBuilder {
     }
 
     private ObjectFormatter initFormatterForType(Class<?> fieldClazz, String[] params) {
-        if (fieldClazz.equals(String.class) || List.class.isAssignableFrom(fieldClazz)){
+        if (fieldClazz.equals(String.class) || List.class.isAssignableFrom(fieldClazz)) {
             return null;
         }
         Class<? extends ObjectFormatter> formatterClass = ObjectFormatters.get(BasicTypeFormatter.detectBasicClass(fieldClazz));

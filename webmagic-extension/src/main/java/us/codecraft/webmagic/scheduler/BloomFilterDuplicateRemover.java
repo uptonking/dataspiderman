@@ -2,8 +2,8 @@ package us.codecraft.webmagic.scheduler;
 
 /**
  * @author code4crafter@gmail.com
- *         Date: 16/12/18
- *         Time: 上午10:23
+ * Date: 16/12/18
+ * Time: 上午10:23
  */
 
 import com.google.common.hash.BloomFilter;
@@ -16,6 +16,8 @@ import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 基于bloom filter的url去重
+ * <p>
  * BloomFilterDuplicateRemover for huge number of urls.
  *
  * @author code4crafer@gmail.com
@@ -34,9 +36,8 @@ public class BloomFilterDuplicateRemover implements DuplicateRemover {
     }
 
     /**
-     *
      * @param expectedInsertions the number of expected insertions to the constructed
-     * @param fpp the desired false positive probability (must be positive and less than 1.0)
+     * @param fpp                the desired false positive probability (must be positive and less than 1.0)
      */
     public BloomFilterDuplicateRemover(int expectedInsertions, double fpp) {
         this.expectedInsertions = expectedInsertions;

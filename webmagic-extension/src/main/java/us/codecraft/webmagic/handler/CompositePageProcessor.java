@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 复合页面解析器
+ * <p>
+ * 可以使用多个解析器
+ *
  * @author code4crafter@gmail.com
  */
 public class CompositePageProcessor implements PageProcessor {
@@ -22,6 +26,7 @@ public class CompositePageProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
+
         for (SubPageProcessor subPageProcessor : subPageProcessors) {
             if (subPageProcessor.match(page.getRequest())) {
                 SubPageProcessor.MatchOther matchOtherProcessorProcessor = subPageProcessor.processPage(page);

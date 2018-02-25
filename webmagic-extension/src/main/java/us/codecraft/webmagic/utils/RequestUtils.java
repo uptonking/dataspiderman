@@ -9,15 +9,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 请求操作工具类
+ *
  * @author code4crafter@gmail.com
- *         Date: 2017/6/5
- *         Time: 下午4:58
+ * Date: 2017/6/5
+ * Time: 下午4:58
  */
 public abstract class RequestUtils {
 
     private static Pattern p4Range = Pattern.compile("\\[(\\d+)\\-(\\d+)\\]");
 
-    public static List<Request> from(String exp){
+    /**
+     * 根据正则表达式生成请求url列表
+     */
+    public static List<Request> from(String exp) {
         Matcher matcher = p4Range.matcher(exp);
         if (!matcher.find()) {
             return Collections.singletonList(new Request(exp));

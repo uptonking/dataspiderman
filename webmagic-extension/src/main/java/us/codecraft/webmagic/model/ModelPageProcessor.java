@@ -12,6 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 将解析结果提取到页面model
+ * <p>
  * The extension to PageProcessor for page model extractor.
  *
  * @author code4crafter@gmail.com <br>

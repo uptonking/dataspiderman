@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 复合Pipeline
+ * <p>
+ * 可以使用多个Pipeline
+ *
  * @author code4crafer@gmail.com
  */
 public class CompositePipeline implements Pipeline {

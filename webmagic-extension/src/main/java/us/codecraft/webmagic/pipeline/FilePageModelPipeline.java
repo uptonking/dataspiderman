@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
+ * 将page model存到文本文件的pipeline
+ * <p>
  * Store results objects (page models) to files in plain format.<br>
  * Use model.getKey() as file name if the model implements HasKey.<br>
  * Otherwise use SHA1 as file name.

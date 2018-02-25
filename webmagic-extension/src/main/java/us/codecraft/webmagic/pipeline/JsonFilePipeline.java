@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
+ * 将抽取结果存到json文件的pipeline
+ * <p>
  * Store results to files in JSON format.<br>
  *
  * @author code4crafter@gmail.com <br>

@@ -7,6 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
+ * 提取结果格式化 注解
+ * <p>
  * Define how the result string is convert to an object for field.
  *
  * @author code4crafter@gmail.com <br>
@@ -36,6 +38,7 @@ public @interface Formatter {
 
     /**
      * If there are more than one formatter for a class, just specify the implement.
+     *
      * @return implement
      */
     Class<? extends ObjectFormatter> formatter() default ObjectFormatter.class;

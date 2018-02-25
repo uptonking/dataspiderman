@@ -4,32 +4,34 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * spider状态bean的接口
+ *
  * @author code4crafer@gmail.com
  * @since 0.5.0
  */
 public interface SpiderStatusMXBean {
 
-     String getName();
+    String getName();
 
-     String getStatus();
+    String getStatus();
 
-     int getThread();
+    int getThread();
 
-     int getTotalPageCount();
+    int getTotalPageCount();
 
-     int getLeftPageCount();
+    int getLeftPageCount();
 
-     int getSuccessPageCount();
+    int getSuccessPageCount();
 
-     int getErrorPageCount();
+    int getErrorPageCount();
 
-     List<String> getErrorPages();
+    List<String> getErrorPages();
 
-     void start();
+    void start();
 
-     void stop();
+    void stop();
 
-     Date getStartTime();
+    Date getStartTime();
 
-     int getPagePerSecond();
+    int getPagePerSecond();
 }

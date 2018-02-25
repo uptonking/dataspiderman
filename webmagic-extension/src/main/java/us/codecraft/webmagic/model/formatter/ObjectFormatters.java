@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 格式化类集合 工具类
+ *
  * @author code4crafter@gmail.com
  * @since 0.3.2
  */
@@ -21,14 +23,12 @@ public class ObjectFormatters {
     public static void put(Class<? extends ObjectFormatter> objectFormatter) {
         try {
             formatterMap.put(objectFormatter.newInstance().clazz(), objectFormatter);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Class<? extends ObjectFormatter> get(Class<?> clazz){
+    public static Class<? extends ObjectFormatter> get(Class<?> clazz) {
         return formatterMap.get(clazz);
     }
 }

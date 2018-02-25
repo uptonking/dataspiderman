@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 基于page model的爬虫
+ * <p>
  * The spider for page model extractor.<br>
  * In webmagic, we call a POJO containing extract result as "page model". <br>
  * You can customize a crawler by write a page model with annotations. <br>

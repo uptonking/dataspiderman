@@ -17,17 +17,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 爬虫监控器
+ *
  * @author code4crafer@gmail.com
  * @since 0.5.0
  */
 @Experimental
 public class SpiderMonitor {
 
+    private static Logger logger = LoggerFactory.getLogger(SpiderMonitor.class);
+
     private static SpiderMonitor INSTANCE = new SpiderMonitor();
 
     private AtomicBoolean started = new AtomicBoolean(false);
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private MBeanServer mbeanServer;
 
@@ -72,6 +74,16 @@ public class SpiderMonitor {
         return INSTANCE;
     }
 
+
+    protected void registerMBean(SpiderStatusMXBean spiderStatus) throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
+//        ObjectName objName = new ObjectName(jmxServerName + ":name=" + spiderStatus.getName());
+        ObjectName objName = new ObjectName(jmxServerName + ":name=" + UrlUtils.removePort(spiderStatus.getName()));
+        mbeanServer.registerMBean(spiderStatus, objName);
+    }
+
+    /**
+     * 爬虫成功和失败的事件监听器 实现类
+     */
     public class MonitorSpiderListener implements SpiderListener {
 
         private final AtomicInteger successCount = new AtomicInteger(0);
@@ -104,10 +116,5 @@ public class SpiderMonitor {
         }
     }
 
-    protected void registerMBean(SpiderStatusMXBean spiderStatus) throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
-//        ObjectName objName = new ObjectName(jmxServerName + ":name=" + spiderStatus.getName());
-        ObjectName objName = new ObjectName(jmxServerName + ":name=" + UrlUtils.removePort(spiderStatus.getName()));
-        mbeanServer.registerMBean(spiderStatus, objName);
-    }
 
 }

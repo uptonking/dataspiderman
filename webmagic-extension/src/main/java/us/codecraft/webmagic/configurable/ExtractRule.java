@@ -6,6 +6,8 @@ import us.codecraft.webmagic.selector.Selector;
 import static us.codecraft.webmagic.selector.Selectors.*;
 
 /**
+ * 抽取规则bean
+ *
  * @author code4crafter@gmail.com
  */
 public class ExtractRule {
@@ -17,12 +19,64 @@ public class ExtractRule {
     private String expressionValue;
 
     private String[] expressionParams;
-
+    /**
+     * 是否抽取多个对象，默认false
+     */
     private boolean multi = false;
 
     private volatile Selector selector;
 
     private boolean notNull = false;
+
+    public void setSelector(Selector selector) {
+        this.selector = selector;
+    }
+
+    public Selector getSelector() {
+        if (selector == null) {
+            synchronized (this) {
+                if (selector == null) {
+                    selector = compileSelector();
+                }
+            }
+        }
+        return selector;
+    }
+
+    /**
+     * 根据抽取表达式类型获取抽取器对象
+     *
+     * @return Selector
+     */
+    private Selector compileSelector() {
+
+        switch (expressionType) {
+
+            case Css:
+                if (expressionParams.length >= 1) {
+                    return $(expressionValue, expressionParams[0]);
+                } else {
+                    return $(expressionValue);
+                }
+
+            case XPath:
+                return xpath(expressionValue);
+
+            case Regex:
+                if (expressionParams.length >= 1) {
+                    return regex(expressionValue, Integer.parseInt(expressionParams[0]));
+                } else {
+                    return regex(expressionValue);
+                }
+
+            case JsonPath:
+                return new JsonPathSelector(expressionValue);
+
+            default:
+                return xpath(expressionValue);
+        }
+    }
+
 
     public String getFieldName() {
         return fieldName;
@@ -62,44 +116,6 @@ public class ExtractRule {
 
     public void setMulti(boolean multi) {
         this.multi = multi;
-    }
-
-    public Selector getSelector() {
-        if (selector == null) {
-            synchronized (this) {
-                if (selector == null) {
-                    selector = compileSelector();
-                }
-            }
-        }
-        return selector;
-    }
-
-    private Selector compileSelector() {
-        switch (expressionType) {
-            case Css:
-                if (expressionParams.length >= 1) {
-                    return $(expressionValue, expressionParams[0]);
-                } else {
-                    return $(expressionValue);
-                }
-            case XPath:
-                return xpath(expressionValue);
-            case Regex:
-                if (expressionParams.length >= 1) {
-                    return regex(expressionValue, Integer.parseInt(expressionParams[0]));
-                } else {
-                    return regex(expressionValue);
-                }
-            case JsonPath:
-                return new JsonPathSelector(expressionValue);
-            default:
-                return xpath(expressionValue);
-        }
-    }
-
-    public void setSelector(Selector selector) {
-        this.selector = selector;
     }
 
     public boolean isNotNull() {

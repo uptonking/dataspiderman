@@ -5,6 +5,8 @@ import us.codecraft.webmagic.utils.Experimental;
 import java.util.Collection;
 
 /**
+ * 多页模型 接口
+ * <p>
  * Extract an object of more than one pages, such as news and articles.<br>
  *
  * @author code4crafter@gmail.com <br>
@@ -18,22 +20,23 @@ public interface MultiPageModel {
      *
      * @return page key
      */
-     String getPageKey();
+    String getPageKey();
 
     /**
      * page is the identifier of a page in pages for one object.
      *
      * @return page
      */
-     String getPage();
+    String getPage();
 
     /**
      * other pages to be extracted.<br>
-     * It is used to judge whether an object contains more than one page, and whether the pages of the object are all extracted.
+     * It is used to judge whether an object contains more than one page,
+     * and whether the pages of the object are all extracted.
      *
      * @return other pages
      */
-     Collection<String> getOtherPages();
+    Collection<String> getOtherPages();
 
     /**
      * Combine multiPageModels to a whole object.
@@ -41,6 +44,6 @@ public interface MultiPageModel {
      * @param multiPageModel multiPageModel
      * @return multiPageModel combined
      */
-     MultiPageModel combine(MultiPageModel multiPageModel);
+    MultiPageModel combine(MultiPageModel multiPageModel);
 
 }

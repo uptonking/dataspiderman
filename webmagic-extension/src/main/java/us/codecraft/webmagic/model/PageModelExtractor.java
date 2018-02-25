@@ -23,12 +23,16 @@ import java.util.regex.Pattern;
 import static us.codecraft.webmagic.model.annotation.ExtractBy.Source.RawText;
 
 /**
+ * 页面解析提取的实现类
+ * <p>
  * The main internal logic of page model extractor.
  *
  * @author code4crafter@gmail.com <br>
  * @since 0.2.0
  */
 class PageModelExtractor {
+
+    private static Logger logger = LoggerFactory.getLogger(PageModelExtractor.class);
 
     private List<Pattern> targetUrlPatterns = new ArrayList<Pattern>();
 
@@ -43,8 +47,6 @@ class PageModelExtractor {
     private List<FieldExtractor> fieldExtractors;
 
     private Extractor objectExtractor;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public static PageModelExtractor create(Class clazz) {
         PageModelExtractor pageModelExtractor = new PageModelExtractor();
@@ -129,11 +131,11 @@ class PageModelExtractor {
         if (extractBy != null) {
             Selector selector = ExtractorUtils.getSelector(extractBy);
             ExtractBy.Source source0 = extractBy.source();
-            if (extractBy.type()== ExtractBy.Type.JsonPath){
+            if (extractBy.type() == ExtractBy.Type.JsonPath) {
                 source0 = RawText;
             }
             FieldExtractor.Source source = null;
-            switch (source0){
+            switch (source0) {
                 case RawText:
                     source = FieldExtractor.Source.RawText;
                     break;
@@ -141,10 +143,10 @@ class PageModelExtractor {
                     source = FieldExtractor.Source.RawHtml;
                     break;
                 case SelectedHtml:
-                    source =FieldExtractor.Source.Html;
+                    source = FieldExtractor.Source.Html;
                     break;
                 default:
-                    source =FieldExtractor.Source.Html;
+                    source = FieldExtractor.Source.Html;
 
             }
 

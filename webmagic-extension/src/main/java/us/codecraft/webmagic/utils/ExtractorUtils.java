@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 抽取工具类
+ * <p>
  * Tools for annotation converting. <br>
  *
  * @author code4crafter@gmail.com <br>
@@ -17,6 +19,7 @@ import java.util.List;
 public class ExtractorUtils {
 
     public static Selector getSelector(ExtractBy extractBy) {
+
         String value = extractBy.value();
         Selector selector;
         switch (extractBy.type()) {

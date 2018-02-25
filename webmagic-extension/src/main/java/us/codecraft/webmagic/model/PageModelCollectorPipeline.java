@@ -10,6 +10,8 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
+ * 根据class对象将抽取结果发送到CollectorPageModelPipeline
+ *
  * @author code4crafter@gmail.com
  * @since 0.4.0
  */
@@ -31,6 +33,7 @@ class PageModelCollectorPipeline<T> implements CollectorPipeline<T> {
     @Override
     public synchronized void process(ResultItems resultItems, Task task) {
         Object o = resultItems.get(clazz.getCanonicalName());
+
         if (o != null) {
             Annotation annotation = clazz.getAnnotation(ExtractBy.class);
             if (annotation == null || !((ExtractBy) annotation).multi()) {
@@ -38,7 +41,7 @@ class PageModelCollectorPipeline<T> implements CollectorPipeline<T> {
             } else {
                 List<Object> list = (List<Object>) o;
                 for (Object o1 : list) {
-                   classPipeline.process((T) o1, task);
+                    classPipeline.process((T) o1, task);
                 }
             }
         }

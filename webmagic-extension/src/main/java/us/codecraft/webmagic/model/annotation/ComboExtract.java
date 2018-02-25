@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
+ * 组合提取器 注解
+ * <p>
  * Combo 'ExtractBy' extractor with and/or operator.
  *
  * @author code4crafter@gmail.com <br>
@@ -15,12 +17,8 @@ import java.lang.annotation.Target;
 public @interface ComboExtract {
 
     /**
-     * The extractors to be combined.
-     *
-     * @return the extractors to be combined
+     * 提取器组合关系 枚举类
      */
-    ExtractBy[] value();
-
     public static enum Op {
         /**
          * All extractors will be arranged as a pipeline. <br>
@@ -33,6 +31,29 @@ public @interface ComboExtract {
          */
         Or;
     }
+
+    /**
+     * 待提取源内容类型 枚举类
+     * types of source for extracting.
+     */
+    public static enum Source {
+        /**
+         * extract from the content extracted by class extractor
+         */
+        SelectedHtml,
+        /**
+         * extract from the raw html
+         */
+        RawHtml
+    }
+
+    /**
+     * The extractors to be combined.
+     *
+     * @return the extractors to be combined
+     */
+    ExtractBy[] value();
+
 
     /**
      * Combining operation of extractors.<br>
@@ -50,20 +71,6 @@ public @interface ComboExtract {
     boolean notNull() default false;
 
     /**
-     * types of source for extracting.
-     */
-    public static enum Source {
-        /**
-         * extract from the content extracted by class extractor
-         */
-        SelectedHtml,
-        /**
-         * extract from the raw html
-         */
-        RawHtml
-    }
-
-    /**
      * The source for extracting. <br>
      * It works only if you already added 'ExtractBy' to Class. <br>
      *
@@ -72,13 +79,16 @@ public @interface ComboExtract {
     Source source() default Source.SelectedHtml;
 
     /**
+     * 提取多个内容
      * Define whether the extractor return more than one result.
      * When set to 'true', the extractor return a list of string (so you should define the field as List). <br>
-     *
+     * <p>
      * Deprecated since 0.4.2. This option is determined automatically by the class of field.
-     * @deprecated since 0.4.2
+     *
      * @return whether the extractor return more than one result
+     * @deprecated since 0.4.2
      */
+    @Deprecated
     boolean multi() default false;
 
 }

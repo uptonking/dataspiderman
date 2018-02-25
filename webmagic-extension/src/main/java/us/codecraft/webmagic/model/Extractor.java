@@ -3,7 +3,10 @@ package us.codecraft.webmagic.model;
 import us.codecraft.webmagic.selector.Selector;
 
 /**
+ * 提取器bean
+ * <p>
  * The object contains 'ExtractBy' information.
+ *
  * @author code4crafter@gmail.com <br>
  * @since 0.2.0
  */

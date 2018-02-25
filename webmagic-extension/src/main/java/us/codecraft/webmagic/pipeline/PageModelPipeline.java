@@ -3,6 +3,8 @@ package us.codecraft.webmagic.pipeline;
 import us.codecraft.webmagic.Task;
 
 /**
+ * page model pipline 接口
+ * <p>
  * Implements PageModelPipeline to persistent your page model.
  *
  * @author code4crafter@gmail.com <br>
@@ -10,6 +12,6 @@ import us.codecraft.webmagic.Task;
  */
 public interface PageModelPipeline<T> {
 
-      void process(T t, Task task);
+    void process(T t, Task task);
 
 }

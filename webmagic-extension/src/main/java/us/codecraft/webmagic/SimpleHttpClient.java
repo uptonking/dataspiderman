@@ -5,8 +5,11 @@ import us.codecraft.webmagic.model.PageMapper;
 import us.codecraft.webmagic.proxy.ProxyProvider;
 
 /**
+ * 简单http客户端
+ * 仅支持get
+ *
  * @author code4crafter@gmail.com
- *         Date: 2017/5/27
+ * Date: 2017/5/27
  * @since 0.7.0
  */
 public class SimpleHttpClient {
@@ -24,7 +27,7 @@ public class SimpleHttpClient {
         this.httpClientDownloader = new HttpClientDownloader();
     }
 
-    public void setProxyProvider(ProxyProvider proxyProvider){
+    public void setProxyProvider(ProxyProvider proxyProvider) {
         this.httpClientDownloader.setProxyProvider(proxyProvider);
     }
 

@@ -10,6 +10,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 将多个页面抽取结果合并到Map.Entry<String, Object>
+ * <p>
  * A pipeline combines the result in more than one page together.<br>
  * Used for news and articles containing more than one web page. <br>
  * MultiPagePipeline will store parts of object and output them when all parts are extracted.<br>

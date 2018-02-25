@@ -5,7 +5,8 @@ import us.codecraft.webmagic.Request;
 import java.util.regex.Pattern;
 
 /**
- * Created with IntelliJ IDEA.
+ * 基于正则表达式实现的检查请求匹配的抽象类
+ * <p>
  * User: Sebastian MA
  * Date: April 03, 2014
  * Time: 10:00

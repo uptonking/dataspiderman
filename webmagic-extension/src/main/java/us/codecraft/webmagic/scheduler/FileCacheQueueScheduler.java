@@ -19,12 +19,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
+ * 请求url缓存到文件
+ * <p>
  * Store urls and cursor in files so that a Spider can resume the status when shutdown.<br>
  *
  * @author code4crafter@gmail.com <br>
  * @since 0.2.0
  */
-public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler,Closeable {
+public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler, Closeable {
 
     private String filePath = System.getProperty("java.io.tmpdir");
 
@@ -45,7 +47,7 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
     private BlockingQueue<Request> queue;
 
     private Set<String> urls;
-    
+
     private ScheduledExecutorService flushThreadPool;
 
     public FileCacheQueueScheduler(String filePath) {
@@ -98,8 +100,8 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
     }
 
     private void initFlushThread() {
-    	flushThreadPool = Executors.newScheduledThreadPool(1);
-    	flushThreadPool.scheduleAtFixedRate(new Runnable() {
+        flushThreadPool = Executors.newScheduledThreadPool(1);
+        flushThreadPool.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 flush();
@@ -154,7 +156,7 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
     private void readCursorFile() throws IOException {
         BufferedReader fileCursorReader = null;
         try {
-        	fileCursorReader = new BufferedReader(new FileReader(getFileName(fileCursor)));
+            fileCursorReader = new BufferedReader(new FileReader(getFileName(fileCursor)));
             String line;
             //read the last number
             while ((line = fileCursorReader.readLine()) != null) {
@@ -166,12 +168,12 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
             }
         }
     }
-    
+
     public void close() throws IOException {
-		flushThreadPool.shutdown();	
-		fileUrlWriter.close();
-		fileCursorWriter.close();
-	}
+        flushThreadPool.shutdown();
+        fileUrlWriter.close();
+        fileCursorWriter.close();
+    }
 
     private String getFileName(String filename) {
         return filePath + task.getUUID() + filename;

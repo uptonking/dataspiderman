@@ -5,6 +5,8 @@ import us.codecraft.webmagic.Page;
 import java.util.List;
 
 /**
+ * 页面提取器构成的mapper
+ *
  * @author code4crafer@gmail.com
  * @since 0.5.2
  */

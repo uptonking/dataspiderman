@@ -1,7 +1,7 @@
 package us.codecraft.webmagic.utils;
 
 /**
- * 实验性接口注解
+ * 实验性标记 注解
  * 只是标记
  * <p>
  * Stands for features unstable.

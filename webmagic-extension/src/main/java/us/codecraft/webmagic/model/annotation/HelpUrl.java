@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
+ * 列表页类url 注解
+ * <p>
  * Define the 'help' url patterns for class. <br>
  * All urls matching the pattern will be crawled and but not extracted for new objects. <br>
  *
@@ -18,8 +20,8 @@ public @interface HelpUrl {
     /**
      * The url patterns to crawl. <br>
      * Use regex expression with some changes: <br>
-     *      "." stand for literal character "." instead of "any character". <br>
-     *      "*" stand for any legal character for url in 0-n length ([^"'#]*) instead of "any length". <br>
+     * "." stand for literal character "." instead of "any character". <br>
+     * "*" stand for any legal character for url in 0-n length ([^"'#]*) instead of "any length". <br>
      *
      * @return the url patterns for class
      */

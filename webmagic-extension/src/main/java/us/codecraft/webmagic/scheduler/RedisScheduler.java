@@ -10,6 +10,8 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 
 /**
+ * 请求url缓存到redis
+ * <p>
  * Use Redis as url scheduler for distributed crawlers.<br>
  *
  * @author code4crafter@gmail.com <br>
@@ -85,7 +87,7 @@ public class RedisScheduler extends DuplicateRemovedScheduler implements Monitor
                 Request o = JSON.parseObject(new String(bytes), Request.class);
                 return o;
             }
-                Request request = new Request(url);
+            Request request = new Request(url);
             return request;
         } finally {
             pool.returnResource(jedis);
@@ -100,8 +102,7 @@ public class RedisScheduler extends DuplicateRemovedScheduler implements Monitor
         return QUEUE_PREFIX + task.getUUID();
     }
 
-    protected String getItemKey(Task task)
-    {
+    protected String getItemKey(Task task) {
         return ITEM_PREFIX + task.getUUID();
     }
 

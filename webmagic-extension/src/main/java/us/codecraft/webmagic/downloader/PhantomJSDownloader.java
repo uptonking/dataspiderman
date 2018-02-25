@@ -11,6 +11,9 @@ import us.codecraft.webmagic.selector.selectable.PlainText;
 import java.io.*;
 
 /**
+ * 基于phantomjs的下载器
+ * 用于下载js动态渲染的页面
+ * <p>
  * this downloader is used to download pages which need to render the javascript
  *
  * @author dolphineor@gmail.com
@@ -32,11 +35,11 @@ public class PhantomJSDownloader extends AbstractDownloader {
 
     /**
      * 添加新的构造函数，支持phantomjs自定义命令
-     *
+     * <p>
      * example:
-     *    phantomjs.exe 支持windows环境
-     *    phantomjs --ignore-ssl-errors=yes 忽略抓取地址是https时的一些错误
-     *    /usr/local/bin/phantomjs 命令的绝对路径，避免因系统环境变量引起的IOException
+     * phantomjs.exe 支持windows环境
+     * phantomjs --ignore-ssl-errors=yes 忽略抓取地址是https时的一些错误
+     * /usr/local/bin/phantomjs 命令的绝对路径，避免因系统环境变量引起的IOException
      *
      * @param phantomJsCommand phantomJsCommand
      */
@@ -71,27 +74,36 @@ public class PhantomJSDownloader extends AbstractDownloader {
      * -- crawl.js end
      * </pre>
      * 具体项目时可以将以上js代码复制下来使用
-     *
+     * <p>
      * example:
-     *    new PhantomJSDownloader("/your/path/phantomjs", "/your/path/crawl.js");
+     * new PhantomJSDownloader("/your/path/phantomjs", "/your/path/crawl.js");
      *
      * @param phantomJsCommand phantomJsCommand
-     * @param crawlJsPath crawlJsPath
+     * @param crawlJsPath      crawlJsPath
      */
     public PhantomJSDownloader(String phantomJsCommand, String crawlJsPath) {
-      PhantomJSDownloader.phantomJsCommand = phantomJsCommand;
-      PhantomJSDownloader.crawlJsPath = crawlJsPath;
+        PhantomJSDownloader.phantomJsCommand = phantomJsCommand;
+        PhantomJSDownloader.crawlJsPath = crawlJsPath;
     }
 
     private void initPhantomjsCrawlPath() {
         PhantomJSDownloader.crawlJsPath = new File(this.getClass().getResource("/").getPath()).getPath() + System.getProperty("file.separator") + "crawl.js ";
     }
 
+    /**
+     * 下载页面内容
+     * 主要控制下载流程，实现下载的方法在getPage()
+     *
+     * @param request request
+     * @param task    task
+     * @return
+     */
     @Override
     public Page download(Request request, Task task) {
         if (logger.isInfoEnabled()) {
             logger.info("downloading page: " + request.getUrl());
         }
+
         String content = getPage(request);
         if (content.contains("HTTP request failed")) {
             for (int i = 1; i <= getRetryNum(); i++) {
@@ -121,6 +133,12 @@ public class PhantomJSDownloader extends AbstractDownloader {
         this.threadNum = threadNum;
     }
 
+    /**
+     * 下载请求的页面
+     *
+     * @param request 请求
+     * @return 下载的页面内容String
+     */
     protected String getPage(Request request) {
         try {
             String url = request.getUrl();

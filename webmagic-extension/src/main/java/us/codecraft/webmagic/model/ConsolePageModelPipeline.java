@@ -5,8 +5,11 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.PageModelPipeline;
 
 /**
+ * 直接在控制台打印提取到的页面model
+ * <p>
  * Print page model in console.<br>
  * Usually used in test.<br>
+ *
  * @author code4crafter@gmail.com <br>
  * @since 0.2.0
  */

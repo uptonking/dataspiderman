@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 将提取的页面model直接进行存储处理
+ * <p>
  * The extension to Pipeline for page model extractor.
  *
  * @author code4crafter@gmail.com <br>

@@ -7,7 +7,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
+ * 字段提取器bean
+ * <p>
  * Wrapper of field and extractor.
+ *
  * @author code4crafter@gmail.com <br>
  * @since 0.2.0
  */
