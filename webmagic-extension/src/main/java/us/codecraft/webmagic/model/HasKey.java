@@ -3,7 +3,7 @@ package us.codecraft.webmagic.model;
 import us.codecraft.webmagic.utils.Experimental;
 
 /**
- * 页面内容的key标识
+ * page model的key标识接口
  * <p>
  * Interface to be implemented by page mode.<br>
  * Can be used to identify a page model, or be used as name of file storing the object.<br>

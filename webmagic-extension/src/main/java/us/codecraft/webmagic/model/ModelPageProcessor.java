@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 将解析结果提取到页面model
+ * 将解析结果提取到page model
  * <p>
  * The extension to PageProcessor for page model extractor.
  *

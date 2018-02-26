@@ -35,6 +35,7 @@ public @interface ExtractBy {
     }
 
     /**
+     * 默认使用xpath抽取
      * Extractor type, support XPath, CSS Selector and regex.
      *
      * @return extractor type

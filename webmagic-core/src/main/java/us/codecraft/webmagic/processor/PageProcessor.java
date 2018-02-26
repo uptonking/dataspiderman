@@ -23,6 +23,7 @@ import us.codecraft.webmagic.Site;
 public interface PageProcessor {
 
     /**
+     * 解析并抽取页面内容
      * process the page, extract urls to fetch, extract the data and store
      *
      * @param page page

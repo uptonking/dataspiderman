@@ -39,13 +39,21 @@ public class HttpClientDownloader extends AbstractDownloader {
 
     private final Map<String, CloseableHttpClient> httpClients = new HashMap<String, CloseableHttpClient>();
 
-    private HttpClientGenerator httpClientGenerator = new HttpClientGenerator();
+    private HttpClientGenerator httpClientGenerator;
 
     private HttpUriRequestConverter httpUriRequestConverter = new HttpUriRequestConverter();
 
     private ProxyProvider proxyProvider;
 
     private boolean responseHeader = true;
+
+    public HttpClientDownloader() {
+        httpClientGenerator = new HttpClientGenerator();
+    }
+
+    public HttpClientDownloader(boolean supportNew) {
+        httpClientGenerator = new HttpClientGenerator(supportNew);
+    }
 
     public void setHttpUriRequestConverter(HttpUriRequestConverter httpUriRequestConverter) {
         this.httpUriRequestConverter = httpUriRequestConverter;

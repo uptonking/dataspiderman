@@ -11,6 +11,7 @@ import java.util.List;
  * 复合页面解析器
  * <p>
  * 可以使用多个解析器
+ * Spider和PageProcessor是1对1，通过CompositePageProcessor实现1对多
  *
  * @author code4crafter@gmail.com
  */

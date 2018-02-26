@@ -8,6 +8,7 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -51,14 +52,52 @@ public class HttpClientGenerator {
         connectionManager.setDefaultMaxPerRoute(100);
     }
 
+    public HttpClientGenerator(boolean supportNew) {
+
+        Registry<ConnectionSocketFactory> reg;
+        if (supportNew) {
+            reg = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", PlainConnectionSocketFactory.INSTANCE)
+                    .register("https", buildSSLConnectionSocketFactoryTLSNew())
+                    .build();
+        } else {
+            reg = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", PlainConnectionSocketFactory.INSTANCE)
+                    .register("https", buildSSLConnectionSocketFactory())
+                    .build();
+        }
+
+        //初始化HttpClient连接池管理器
+        connectionManager = new PoolingHttpClientConnectionManager(reg);
+        connectionManager.setDefaultMaxPerRoute(100);
+    }
+
     /**
      * 创建https的连接工厂
      * 优先绕过安全证书
+     * 默认的HttpClient只会用TLSv1去请求
      */
     private SSLConnectionSocketFactory buildSSLConnectionSocketFactory() {
         try {
             // 优先绕过安全证书
             return new SSLConnectionSocketFactory(createIgnoreVerifySSL());
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            logger.error("ssl connection fail", e);
+        }
+        return SSLConnectionSocketFactory.getSocketFactory();
+    }
+
+    /**
+     * 创建https的连接工厂
+     * 优先绕过安全证书
+     * 支持TLS1.2
+     */
+    private SSLConnectionSocketFactory buildSSLConnectionSocketFactoryTLSNew() {
+        try {
+            // 优先绕过安全证书
+            return new SSLConnectionSocketFactory(createIgnoreVerifySSL(), new String[]{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"},
+                    null,
+                    new DefaultHostnameVerifier());
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             logger.error("ssl connection fail", e);
         }

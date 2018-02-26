@@ -21,6 +21,7 @@ import us.codecraft.webmagic.Task;
 public interface Pipeline {
 
     /**
+     * 解析结果进一步处理
      * Process extracted results.
      *
      * @param resultItems resultItems

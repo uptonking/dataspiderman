@@ -6,6 +6,7 @@ import java.lang.annotation.Target;
 
 /**
  * 详情页类url 注解
+ * TargetUrl的意思是只有以下格式的URL才会被抽取出生成model对象
  * <p>
  * Define the url patterns for class. <br>
  * All urls matching the pattern will be crawled and extracted for new objects. <br>

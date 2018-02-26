@@ -12,8 +12,10 @@
     - [ ] todo2   
 
 - dataspiderman的主要修改
-    -  新增功能用到了java 8的部分api
+    -  fix: 爬取使用https TLSv1.2的网站出现异常 `SSLException: Received fatal alert: protocol_version`  
+        显式设置支持ssl的下载器 `setDownloader(new HttpClientDownloader(true))`
     -  core模块selector包中的部分类分组到element和selectable2个子包
+    -  新增功能用到了java 8的部分api
 
 - webmagic的主要特色：
     

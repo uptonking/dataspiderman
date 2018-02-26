@@ -1,6 +1,7 @@
 package us.codecraft.webmagic.example;
 
 import us.codecraft.webmagic.Site;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.model.ConsolePageModelPipeline;
 import us.codecraft.webmagic.model.HasKey;
 import us.codecraft.webmagic.model.OOSpider;
@@ -12,11 +13,14 @@ import us.codecraft.webmagic.model.annotation.TargetUrl;
 import java.util.List;
 
 /**
+ * 注解爬虫示例
+ *
  * @author code4crafter@gmail.com <br>
  * @since 0.3.2
  */
 @TargetUrl("https://github.com/\\w+/\\w+")
-@HelpUrl({"https://github.com/\\w+\\?tab=repositories", "https://github.com/\\w+", "https://github.com/explore/*"})
+//@HelpUrl({"https://github.com/\\w+\\?tab=repositories", "https://github.com/\\w+", "https://github.com/explore/*"})
+@HelpUrl({"https://github.com/\\w+\\?tab=repositories", "https://github.com/explore/*"})
 public class GithubRepo implements HasKey {
 
     @ExtractBy(value = "//h1[@class='public']/strong/a/text()", notNull = true)
@@ -41,9 +45,15 @@ public class GithubRepo implements HasKey {
     private String url;
 
     public static void main(String[] args) {
-        OOSpider.create(Site.me().setSleepTime(100)
-                , new ConsolePageModelPipeline(), GithubRepo.class)
-                .addUrl("https://github.com/code4craft").thread(10).run();
+
+        OOSpider.create(
+                Site.me().setSleepTime(100),
+                new ConsolePageModelPipeline(),
+                GithubRepo.class)
+                .addUrl("https://github.com/code4craft")
+                .setDownloader(new HttpClientDownloader(true))
+                .thread(10).
+                run();
     }
 
     @Override
@@ -91,4 +101,5 @@ public class GithubRepo implements HasKey {
                 ", url='" + url + '\'' +
                 '}';
     }
+
 }

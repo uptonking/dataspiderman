@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 将提取的页面model直接进行存储处理
+ * 将提取的page model进行存储处理
  * <p>
  * The extension to Pipeline for page model extractor.
  *
@@ -33,13 +33,21 @@ class ModelPipeline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
+
         for (Map.Entry<Class, PageModelPipeline> classPageModelPipelineEntry : pageModelPipelines.entrySet()) {
+
             Object o = resultItems.get(classPageModelPipelineEntry.getKey().getCanonicalName());
+
             if (o != null) {
                 Annotation annotation = classPageModelPipelineEntry.getKey().getAnnotation(ExtractBy.class);
+
                 if (annotation == null || !((ExtractBy) annotation).multi()) {
+                    ///处理单个抽取结果
+
                     classPageModelPipelineEntry.getValue().process(o, task);
                 } else {
+                    ///处理多个抽取结果
+
                     List<Object> list = (List<Object>) o;
                     for (Object o1 : list) {
                         classPageModelPipelineEntry.getValue().process(o1, task);

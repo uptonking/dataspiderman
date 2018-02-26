@@ -32,6 +32,9 @@ import java.util.Map;
  */
 public class Page {
 
+    /**
+     * 页面对应的请求url
+     */
     private Request request;
     /**
      * 页面解析结果

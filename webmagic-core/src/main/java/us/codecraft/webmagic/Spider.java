@@ -307,6 +307,7 @@ public class Spider implements Runnable, Task {
     /**
      * 初始化组件
      * 包括downloader，pipelines
+     * 在run()方法中被调用
      */
     private void initComponent() {
 
@@ -340,7 +341,10 @@ public class Spider implements Runnable, Task {
      */
     @Override
     public void run() {
+
         checkRunningStat();
+
+        //初始化默认的HttpClientDownloader和ConsolePipeline
         initComponent();
         logger.info("Spider {} started!", getUUID());
 
@@ -493,6 +497,8 @@ public class Spider implements Runnable, Task {
 
     private void onDownloadSuccess(Request request, Page page) {
         if (site.getAcceptStatCode().contains(page.getStatusCode())) {
+
+            //解析并抽取页面内容
             pageProcessor.process(page);
             extractAndAddRequests(page, spawnUrl);
             if (!page.getResultItems().isSkip()) {

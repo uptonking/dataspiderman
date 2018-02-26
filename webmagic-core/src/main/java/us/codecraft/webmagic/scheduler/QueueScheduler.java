@@ -9,7 +9,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
- * 用于保存请求url地址的普通队列
+ * 用于保存请求url地址的阻塞队列
+ * 基于LinkedBlockingQueue实现
  * <p>
  * Basic Scheduler implementation.<br>
  * Store urls to fetch in LinkedBlockingQueue and remove duplicate urls by HashMap.

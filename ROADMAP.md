@@ -13,3 +13,13 @@
 - spider ui
 - 自定义数据格式化方法
 - ResultItems支持二进制流
+
+## Discuss
+- 爬虫的顺序控制
+
+## FAQ
+- 如何获取TargetUrl的url及url中的部分路径
+- 取出a标签的href 相对路径补充绝对路径
+- @ExtractBy 直接指定值，用于测试
+- css直接抽取文本，不是outerHTML
+- 抓取Css属性的内容
