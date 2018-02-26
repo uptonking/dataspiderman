@@ -53,7 +53,7 @@ public abstract class ElementOperator {
     }
 
     /**
-     * 获取元素的text
+     * 所有的直接和间接文本子节点
      */
     public static class AllText extends ElementOperator {
 
@@ -69,7 +69,7 @@ public abstract class ElementOperator {
     }
 
     /**
-     * 获取元素的html
+     * 内部html，不包括标签的html本身
      */
     public static class Html extends ElementOperator {
 
@@ -85,7 +85,7 @@ public abstract class ElementOperator {
     }
 
     /**
-     * 获取包含外层元素标签的html
+     * 内部html，包括标签的html本身
      */
     public static class OuterHtml extends ElementOperator {
 
@@ -101,7 +101,8 @@ public abstract class ElementOperator {
     }
 
     /**
-     * 获取元素的纯文本
+     * 所有的直接和间接文本子节点，并将一些标签替换为换行，使纯文本显示更整洁
+     * 慎用，实际会去掉外层标签，但会保留内层标签和文本
      */
     public static class TidyText extends ElementOperator {
 
