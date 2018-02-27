@@ -20,6 +20,7 @@
 - @ExtractBy 直接指定值，用于测试
 - css抽取器直接抽取文本，不是outerHTML
 
+
 ## Discuss
 - 爬虫的顺序控制
 
@@ -29,3 +30,6 @@
 - getTotalRequestsCount()没有实现
 - 抓取Css属性的内容  
 xsoup `//tag/@key`
+- 常见爬虫模式总结
+    - list + item
+    - 页面中多区域 多列表
