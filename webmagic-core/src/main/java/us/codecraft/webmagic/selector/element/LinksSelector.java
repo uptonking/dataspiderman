@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 针对html的超链接抽取器
+ * 选择所有超链接
  * <p>
  * Links selector based on jsoup. Use absolute url. <br>
  *

@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * 301-永久重定向
  * 302-临时重定向
+ * 303-302+POST重定向为GET
+ * 307-302+不会把POST转为GET
  * <p>
  * HttpClient默认跳转：httpClientBuilder.setRedirectStrategy(new LaxRedirectStrategy());
  * 上述代码在post/redirect/post这种情况下不会传递原有请求的数据信息。所以参考了下SeimiCrawler这个项目的重定向策略。
@@ -32,7 +34,11 @@ public class CustomRedirectStrategy extends LaxRedirectStrategy {
     public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
         URI uri = getLocationURI(request, response, context);
         String method = request.getRequestLine().getMethod();
+
         if ("post".equalsIgnoreCase(method)) {
+            ///post请求首先会重用原先的request对象，并重新设置uri为新的重定向url，然后移除新请求不需要的头部
+            // 重用request对象的好处是，post/redirect/post 302跳转时会携带原有的POST参数，就防止了参数丢失的问题
+
             try {
                 HttpRequestWrapper httpRequestWrapper = (HttpRequestWrapper) request;
                 httpRequestWrapper.setURI(uri);
@@ -42,6 +48,7 @@ public class CustomRedirectStrategy extends LaxRedirectStrategy {
                 logger.error("强转为HttpRequestWrapper出错");
             }
             return new HttpPost(uri);
+
         } else {
             return new HttpGet(uri);
         }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 抽取器结果求交
+ * 选择器结果求交
  * <p>
  * All selectors will be arranged as a pipeline. <br>
  * The next selector uses the result of the previous as source.

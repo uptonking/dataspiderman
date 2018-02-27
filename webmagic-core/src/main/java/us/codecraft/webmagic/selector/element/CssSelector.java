@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 针对html、text的css抽取器
+ * css选择器
+ * 基本实现都是基于jsoup的css选择接口
  * <p>
  * CSS selector. Based on Jsoup.
  *

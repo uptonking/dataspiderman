@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 请求url缓存到文件
  * 使用文件保存抓取URL，可以在关闭程序并下次启动时，从之前抓取到的URL继续抓取
+ * 通过Set来去重
  * <p>
  * Store urls and cursor in files so that a Spider can resume the status when shutdown.<br>
  *
@@ -30,12 +31,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler, Closeable {
 
     private String filePath = System.getProperty("java.io.tmpdir");
-
+    /**
+     * 存储一个数字，这个数字代表了读取.urls.txt的行数
+     */
+    private String fileCursor = ".cursor.txt";
+    /**
+     * 存储所有的urls
+     */
     private String fileUrlAllName = ".urls.txt";
 
     private Task task;
 
-    private String fileCursor = ".cursor.txt";
 
     private PrintWriter fileUrlWriter;
 

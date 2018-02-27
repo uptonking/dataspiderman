@@ -36,8 +36,10 @@ import java.util.Map;
 public class HttpClientDownloader extends AbstractDownloader {
 
     private static Logger logger = LoggerFactory.getLogger(HttpClientDownloader.class);
-
-    private final Map<String, CloseableHttpClient> httpClients = new HashMap<String, CloseableHttpClient>();
+    /**
+     * 保存根据站点域名生成的HttpClient实例的map，以便重用
+     */
+    private final Map<String, CloseableHttpClient> httpClients = new HashMap<>();
 
     private HttpClientGenerator httpClientGenerator;
 
@@ -65,7 +67,7 @@ public class HttpClientDownloader extends AbstractDownloader {
 
     /**
      * 根据域名获取 CloseableHttpClient
-     * 同一个域名共用一个client
+     * 同一个域名重用一个client
      *
      * @param site 连接信息bean
      * @return CloseableHttpClient
@@ -95,7 +97,7 @@ public class HttpClientDownloader extends AbstractDownloader {
      * 下载页面内容
      *
      * @param request request
-     * @param task    task
+     * @param task    传入的是Spider实例
      * @return 下载完成的页面，未解析
      */
     @Override
@@ -115,20 +117,25 @@ public class HttpClientDownloader extends AbstractDownloader {
         try {
             //获取http响应内容
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
+            //下载内容转为Page
             page = handleResponse(request, request.getCharset() != null ? request.getCharset() : task.getSite().getCharset(), httpResponse, task);
 
             onSuccess(request);
             logger.info("downloading page success {}", request.getUrl());
             return page;
+
         } catch (IOException e) {
             logger.warn("download page {} error", request.getUrl(), e);
             onError(request);
             return page;
+
         } finally {
+            ///确认http response已被消费
             if (httpResponse != null) {
                 //ensure the connection is released back to pool
                 EntityUtils.consumeQuietly(httpResponse.getEntity());
             }
+            ///代理入池
             if (proxyProvider != null && proxy != null) {
                 proxyProvider.returnProxy(proxy, page, task);
             }
@@ -136,7 +143,7 @@ public class HttpClientDownloader extends AbstractDownloader {
     }
 
     /**
-     * 响应结果根据编码解析成RawText
+     * 响应内容转换成Page
      */
     protected Page handleResponse(Request request, String charset, HttpResponse httpResponse, Task task) throws IOException {
 
@@ -146,7 +153,7 @@ public class HttpClientDownloader extends AbstractDownloader {
         page.setBytes(bytes);
         if (!request.isBinaryContent()) {
             if (charset == null) {
-                //自动获取请求页面内容的字符集
+                //获取请求页面内容的字符集
                 charset = getHtmlCharset(contentType, bytes);
             }
             page.setCharset(charset);
@@ -163,13 +170,16 @@ public class HttpClientDownloader extends AbstractDownloader {
     }
 
     /**
-     * 自动获取请求页面内容的字符集
+     * 自动检测请求页面内容的字符集
      */
     private String getHtmlCharset(String contentType, byte[] contentBytes) throws IOException {
 
+        //思路是先判断httpResponse.getEntity().getContentType().getValue()是否含有比如charset=utf-8
+        //否则用Jsoup解析内容，判断是提取meta标签的charset属性，分html版本情况判断出字符编码
         String charset = CharsetUtils.detectCharset(contentType, contentBytes);
 
         if (charset == null) {
+            //获取jvm默认编码
             charset = Charset.defaultCharset().name();
             logger.warn("Charset autodetect failed, use {} as charset. Please specify charset in Site.setCharset()", Charset.defaultCharset());
         }

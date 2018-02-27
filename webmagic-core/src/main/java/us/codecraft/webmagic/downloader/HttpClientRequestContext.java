@@ -15,6 +15,7 @@ public class HttpClientRequestContext {
 
     /**
      * 通用请求接口实例
+     * 用于abort()或获取请求方法
      */
     private HttpUriRequest httpUriRequest;
 

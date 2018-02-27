@@ -8,7 +8,8 @@ import us.codecraft.xsoup.Xsoup;
 import java.util.List;
 
 /**
- * 对html可用的XpathSelector
+ * xpath选择器
+ * 基于jsoup实现的xsoup的相关接口
  * <p>
  * XPath selector based on Xsoup.
  *

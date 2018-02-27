@@ -3,7 +3,7 @@ package us.codecraft.webmagic.scheduler;
 import us.codecraft.webmagic.Task;
 
 /**
- * 请求url地址监控接口
+ * 请求url地址管理及监控接口
  * <p>
  * The scheduler whose requests can be counted for monitor.
  *
@@ -13,7 +13,7 @@ import us.codecraft.webmagic.Task;
 public interface MonitorableScheduler extends Scheduler {
 
     /**
-     * 获取剩余请求url数
+     * 获取请求url剩余数量
      */
     int getLeftRequestsCount(Task task);
 

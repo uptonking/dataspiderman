@@ -101,6 +101,7 @@ public class Page {
     }
 
     /**
+     * 返回html内容，不支持JsonPath
      * get html content of page
      *
      * @return html
@@ -122,6 +123,7 @@ public class Page {
     }
 
     /**
+     * 返回json内容，支持JsonPath
      * get json content of page
      *
      * @return json

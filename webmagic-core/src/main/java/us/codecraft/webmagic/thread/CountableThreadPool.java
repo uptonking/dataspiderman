@@ -7,7 +7,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 爬虫计数器
+ * 获取爬虫使用线程数量的计数器
+ * 为防止大量url入池等待，提供了阻塞方式管理url入池
  * <p>
  * Thread pool for workers.<br><br>
  * Use {@link java.util.concurrent.ExecutorService} as inner implement. <br><br>
@@ -21,7 +22,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CountableThreadPool {
 
     private int threadNum;
-
+    /**
+     * 正在运行的线程数
+     */
     private AtomicInteger threadAlive = new AtomicInteger();
 
     private ReentrantLock reentrantLock = new ReentrantLock();
@@ -61,6 +64,7 @@ public class CountableThreadPool {
 
         if (threadAlive.get() >= threadNum) {
             try {
+                ///当正在运行的线程数大于允许的线程数时，阻塞等待
                 reentrantLock.lock();
                 while (threadAlive.get() >= threadNum) {
                     try {

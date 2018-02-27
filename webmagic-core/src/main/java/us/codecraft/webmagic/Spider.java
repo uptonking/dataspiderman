@@ -28,7 +28,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Spider是webmagic的爬虫入口类，负责组件初始化、控制爬虫启停
+ * Spider是webmagic的爬虫入口类，负责组件配置、初始化，以及控制爬虫启停
+ * 设置爬虫的主要组件和配置时都需要先checkIfRunning()
  * <p>
  * Downloader、PageProcessor、Scheduler、Pipeline都是Spider的属性
  * <p>
@@ -71,13 +72,21 @@ public class Spider implements Runnable, Task {
     private final static int STAT_INIT = 0;
     private final static int STAT_RUNNING = 1;
     private final static int STAT_STOPPED = 2;
-
+    /**
+     * 请求url地址管理器，默认使用QueueScheduler
+     */
     private Scheduler scheduler = new QueueScheduler();
-
+    /**
+     * 下载器，默认使用HttpClientDownloader
+     */
     private Downloader downloader;
-
+    /**
+     * 页面内容解析器pageProcessor，初始化Spider需要传入
+     */
     private PageProcessor pageProcessor;
-
+    /**
+     * 解析结果处理器，默认使用ConsolePipeline，可以配置多个，多个Pipeline链式处理结果
+     */
     private List<Pipeline> pipelines = new ArrayList<Pipeline>();
 
     /**
@@ -93,10 +102,12 @@ public class Spider implements Runnable, Task {
      */
     private String uuid;
     /**
-     * 爬虫计数器
+     * 爬虫总线程数量计数器
      */
     private CountableThreadPool threadPool;
-
+    /**
+     * 提供线程池，默认使用newFixedThreadPool
+     */
     private ExecutorService executorService;
     /**
      * 爬虫并发线程数，默认单线程
@@ -106,8 +117,13 @@ public class Spider implements Runnable, Task {
      * 爬虫运行状态
      */
     private AtomicInteger stat = new AtomicInteger(STAT_INIT);
-
+    /**
+     * 爬取完所有url时是否退出线程
+     */
     private boolean exitWhenComplete = true;
+    /**
+     * 退出爬虫线程时是否释放资源
+     */
     private boolean destroyWhenExit = true;
     /**
      * 是否是派生的二次爬虫地址
@@ -116,15 +132,21 @@ public class Spider implements Runnable, Task {
 
     private ReentrantLock newUrlLock = new ReentrantLock();
     private Condition newUrlCondition = newUrlLock.newCondition();
-
+    /**
+     * 爬取页面是否成功的监听器
+     */
     private List<SpiderListener> spiderListeners;
-
+    /**
+     * 已爬取的页面数量
+     */
     private final AtomicLong pageCount = new AtomicLong(0);
     /**
-     * 爬虫启动时间
+     * 爬虫启动时间，用于统计
      */
     private Date startTime;
-
+    /**
+     * 最大空闲等待时间，默认30s
+     */
     private int emptySleepTime = 30000;
 
     /**
@@ -305,8 +327,8 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 初始化组件
-     * 包括downloader，pipelines
+     * 初始化组件及线程池
+     * 包括downloader，pipelines，线程池，初始请求
      * 在run()方法中被调用
      */
     private void initComponent() {
@@ -337,27 +359,34 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 在新线程中运行爬虫任务
+     * 启动爬虫
      */
     @Override
     public void run() {
 
         checkRunningStat();
 
-        //初始化默认的HttpClientDownloader和ConsolePipeline
+        //初始化组件及线程池
         initComponent();
         logger.info("Spider {} started!", getUUID());
 
         while (!Thread.currentThread().isInterrupted() && stat.get() == STAT_RUNNING) {
+
             final Request request = scheduler.poll(this);
             if (request == null) {
+                ///若请求为空，此时请求url队列也为空
+
                 if (threadPool.getThreadAlive() == 0 && exitWhenComplete) {
+                    //退出循环，不再出队
                     break;
                 }
 
-                // wait until new url added 等待新url，等待时加锁阻塞
+                // wait until new url added 等待新url，释放锁
                 waitNewUrl();
+
             } else {
+                ///若请求不为空，则爬取url
+
                 threadPool.execute(new Runnable() {
 
                     /**
@@ -366,6 +395,7 @@ public class Spider implements Runnable, Task {
                     @Override
                     public void run() {
                         try {
+                            //下载请求
                             processRequest(request);
                             onSuccess(request);
                         } catch (Exception e) {
@@ -374,7 +404,7 @@ public class Spider implements Runnable, Task {
                         } finally {
                             pageCount.incrementAndGet();
 
-                            //释放锁
+                            //当前线程结束，唤醒一个线程
                             signalNewUrl();
                         }
                     }
@@ -391,7 +421,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 在新线程中启动本爬虫
+     * 在新线程中启动爬虫
      */
     public void runAsync() {
         Thread thread = new Thread(this);
@@ -447,6 +477,7 @@ public class Spider implements Runnable, Task {
 
     /**
      * 爬虫结束时释放资源
+     * 包括关闭4大组件、线程池
      */
     public void close() {
         destroyEach(downloader);
@@ -495,12 +526,17 @@ public class Spider implements Runnable, Task {
         }
     }
 
+    /**
+     * 一个请求下载成功时解析内容
+     */
     private void onDownloadSuccess(Request request, Page page) {
         if (site.getAcceptStatCode().contains(page.getStatusCode())) {
 
             //解析并抽取页面内容
             pageProcessor.process(page);
+            //将下载页面中派生的二次爬虫地址加入请求队列
             extractAndAddRequests(page, spawnUrl);
+
             if (!page.getResultItems().isSkip()) {
                 for (Pipeline pipeline : pipelines) {
                     pipeline.process(page.getResultItems(), this);
@@ -512,6 +548,11 @@ public class Spider implements Runnable, Task {
         sleep(site.getSleepTime());
     }
 
+    /**
+     * 一个请求下载失败时的处理
+     * 若设置了循环重试，则重试下载
+     * 若未开启重试，该线程等待
+     */
     private void onDownloaderFail(Request request) {
         if (site.getCycleRetryTimes() == 0) {
             sleep(site.getSleepTime());
@@ -523,6 +564,7 @@ public class Spider implements Runnable, Task {
 
     /**
      * 请求下载失败时，循环重试
+     * <p>
      * 默认重复0次，即不重试，见{@link us.codecraft.webmagic.Site#cycleRetryTimes}
      */
     private void doCycleRetry(Request request) {
@@ -530,11 +572,14 @@ public class Spider implements Runnable, Task {
 
         if (cycleTriedTimesObject == null) {
             addRequest(SerializationUtils.clone(request).setPriority(0).putExtra(Request.CYCLE_TRIED_TIMES, 1));
+
         } else {
             int cycleTriedTimes = (Integer) cycleTriedTimesObject;
+            //重试次数+1
             cycleTriedTimes++;
             //重试次数限制
             if (cycleTriedTimes < site.getCycleRetryTimes()) {
+                //再次加入请求队列
                 addRequest(SerializationUtils.clone(request).setPriority(0).putExtra(Request.CYCLE_TRIED_TIMES, cycleTriedTimes));
             }
         }
@@ -555,7 +600,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 从下载的页面中解析 二次爬虫地址，并加入请求队列
+     * 将下载页面中派生的二次爬虫地址加入请求队列
      */
     private void extractAndAddRequests(Page page, boolean spawnUrl) {
         if (spawnUrl && CollectionUtils.isNotEmpty(page.getTargetRequests())) {
@@ -664,25 +709,30 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 阻塞等待新url
+     * 等待新url
+     * 限时等待
      */
     private void waitNewUrl() {
+        //加锁
         newUrlLock.lock();
+
         try {
             //double check
             if (threadPool.getThreadAlive() == 0 && exitWhenComplete) {
                 return;
             }
+            //开始等待，随时可被动唤醒，超时则自动唤醒
             newUrlCondition.await(emptySleepTime, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             logger.warn("waitNewUrl - interrupted, error {}", e);
         } finally {
+            //解锁
             newUrlLock.unlock();
         }
     }
 
     /**
-     * 释放等待新url的锁
+     * 唤醒一个线程
      */
     private void signalNewUrl() {
         try {
@@ -728,7 +778,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 获取正在运行的活动爬虫数量
+     * 获取正在运行的线程数量
      * Get thread count which is running
      *
      * @return thread count which is running
@@ -865,7 +915,7 @@ public class Spider implements Runnable, Task {
     }
 
     /**
-     * 设置没有url时的等待时间
+     * 设置最大空闲等待时间
      * Set wait time when no url is polled.<br><br>
      *
      * @param emptySleepTime In MILLISECONDS.

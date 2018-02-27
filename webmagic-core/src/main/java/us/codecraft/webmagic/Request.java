@@ -43,6 +43,7 @@ public class Request implements Serializable {
 
     /**
      * 请求的优先级，用于爬虫地址调度
+     * 默认为0L，值越大，优先级越高，越早处理
      * Priority of the request.<br>
      * The bigger will be processed earlier. <br>
      *

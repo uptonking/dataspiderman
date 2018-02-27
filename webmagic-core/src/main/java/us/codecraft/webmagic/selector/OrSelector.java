@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 抽取器结果求并
+ * 选择器结果求并
  * <p>
  * All extractors will do extracting separately, <br>
  * and the results of extractors will combined as the final result.

@@ -32,6 +32,7 @@ import java.util.Map;
 
 /**
  * HttpClient生成器，基于连接池重用HttpClient
+ * 工厂模式
  *
  * @author code4crafter@gmail.com <br>
  * @since 0.4.0
@@ -186,6 +187,7 @@ public class HttpClientGenerator {
         SocketConfig socketConfig = socketConfigBuilder.build();
         httpClientBuilder.setDefaultSocketConfig(socketConfig);
         connectionManager.setDefaultSocketConfig(socketConfig);
+        //设置重试次数
         httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(site.getRetryTimes(), true));
 
         generateCookie(httpClientBuilder, site);

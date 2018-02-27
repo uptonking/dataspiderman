@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 用于保存请求url地址的阻塞队列
+ * 默认使用的队列
  * 基于LinkedBlockingQueue实现
  * <p>
  * Basic Scheduler implementation.<br>
@@ -26,6 +27,7 @@ public class QueueScheduler extends DuplicateRemovedScheduler implements Monitor
     @Override
     public void pushWhenNoDuplicate(Request request, Task task) {
         queue.add(request);
+        logger.debug("====QueueScheduler.pushWhenNoDuplicate() called");
     }
 
     @Override
@@ -42,4 +44,5 @@ public class QueueScheduler extends DuplicateRemovedScheduler implements Monitor
     public int getTotalRequestsCount(Task task) {
         return getDuplicateRemover().getTotalRequestsCount(task);
     }
+
 }

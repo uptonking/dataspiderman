@@ -3,7 +3,7 @@ package us.codecraft.webmagic.selector;
 import java.util.List;
 
 /**
- * 针对text的抽取器接口
+ * 定义了根据字符串选择单个元素和选择多个元素的方法
  * <p>
  * Selector(extractor) for text.<br>
  *

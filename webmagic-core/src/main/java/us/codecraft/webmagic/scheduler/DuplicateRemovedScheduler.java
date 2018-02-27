@@ -33,6 +33,7 @@ public abstract class DuplicateRemovedScheduler implements Scheduler {
 
     /**
      * 加入请求队列时检查重复
+     * 请求方法为POST，默认不去重
      *
      * @param request request
      * @param task    task
@@ -40,9 +41,12 @@ public abstract class DuplicateRemovedScheduler implements Scheduler {
     @Override
     public void push(Request request, Task task) {
         logger.trace("get a candidate url {}", request.getUrl());
+
+        /// 3个条件满足一个就加入爬取队列
         if (shouldReserved(request) || noNeedToRemoveDuplicate(request) || !duplicatedRemover.isDuplicate(request, task)) {
             logger.debug("push to queue {}", request.getUrl());
 
+            //注意post方法不去重
             pushWhenNoDuplicate(request, task);
         }
     }
@@ -51,15 +55,21 @@ public abstract class DuplicateRemovedScheduler implements Scheduler {
         return request.getExtra(Request.CYCLE_TRIED_TIMES) != null;
     }
 
+    /**
+     * 判断请求方法是否为POST，若是，则不去重，若不是，则该去重
+     *
+     * @param request 请求
+     * @return 是否不去重
+     */
     protected boolean noNeedToRemoveDuplicate(Request request) {
         return HttpConstant.Method.POST.equalsIgnoreCase(request.getMethod());
     }
 
     /**
-     * @param request
-     * @param task
+     * 请求入队，由子类实现
+     * 模板设计模式
      */
     protected void pushWhenNoDuplicate(Request request, Task task) {
-
+        logger.debug("====DuplicateRemovedScheduler.pushWhenNoDuplicate() called");
     }
 }

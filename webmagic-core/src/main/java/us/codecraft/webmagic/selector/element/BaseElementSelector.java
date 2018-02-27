@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * 通用抽取器抽象类
  * 可同时处理text和html
+ * 主要用于CSS、Xpath选择器继承
  *
  * @author code4crafter@gmail.com
  * @since 0.3.0

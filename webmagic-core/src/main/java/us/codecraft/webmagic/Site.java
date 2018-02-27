@@ -41,7 +41,9 @@ public class Site {
     private boolean useGzip = true;
 
     private boolean disableCookieManagement = false;
-
+    /**
+     * 下载失败后不重试时的等待时间
+     */
     private int sleepTime = 5000;
     /**
      * 设置重试次数
@@ -233,6 +235,7 @@ public class Site {
     }
 
     /**
+     * 请求下载时间间隔
      * Get the interval between the processing of two pages.<br>
      * Time unit is micro seconds.<br>
      *

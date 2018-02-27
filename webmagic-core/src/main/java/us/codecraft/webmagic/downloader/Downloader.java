@@ -17,7 +17,7 @@ import us.codecraft.webmagic.Task;
 public interface Downloader {
 
     /**
-     * 输入请求url对象和爬虫任务对象，返回下载页面
+     * 输入请求url对象和爬虫任务对象，返回下载页面html/json
      * Downloads web pages and store in Page object.
      *
      * @param request request

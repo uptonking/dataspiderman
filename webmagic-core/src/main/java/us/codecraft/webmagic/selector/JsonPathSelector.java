@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 从JSON中解析内容
+ * JSON选择器
  * 基于JsonPath
  * <p>
  * JsonPath selector.<br>

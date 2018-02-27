@@ -5,7 +5,8 @@ import org.jsoup.nodes.Element;
 import java.util.List;
 
 /**
- * 针对html的抽取器接口
+ * 定义了根据jsoup element选择单个、多个元素的方法
+ * 主要用于CSS、Xpath选择器
  * <p>
  * Selector(extractor) for html elements.<br>
  *

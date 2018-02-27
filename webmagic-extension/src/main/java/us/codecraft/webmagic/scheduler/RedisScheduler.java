@@ -12,6 +12,8 @@ import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 /**
  * 请求url缓存到redis
  * 使用Redis保存抓取队列，可进行多台机器同时合作抓取
+ * 采用set来存储已经抓取过的url，list来存储待抓url队列，hash来存储序列化数据
+ * hash中的键为url的SHA值，值为Request的json序列化字符串，所有数据类型的键都是基于Spider的UUID来生成的
  * <p>
  * Use Redis as url scheduler for distributed crawlers.<br>
  *
